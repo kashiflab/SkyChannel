@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_subscribe"
+        android:icon="@drawable/ic_subscribe"
+        android:title="@string/subscribe" />
+
+    <item
+        android:id="@+id/nav_like"
+        android:icon="@drawable/ic_like"
+        android:title="@string/like" />
+
+    <item
+        android:id="@+id/nav_view"
+        android:icon="@drawable/ic_video"
+        android:title="@string/view" />
+    <item
+        android:id="@+id/nav_campaign"
+        android:icon="@drawable/ic_campaign"
+        android:title="@string/campaign" />
+    <item
+        android:id="@+id/nav_more"
+        android:icon="@drawable/ic_more"
+        android:title="@string/more" />
+
+</menu>

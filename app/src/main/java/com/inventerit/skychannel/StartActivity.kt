@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.text.Html
 import android.view.View
 import android.view.WindowInsets
@@ -14,7 +15,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import com.google.firebase.auth.FirebaseAuth
+import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.databinding.ActivityStartBinding
+import com.tramsun.libs.prefcompat.Pref
 import kotlinx.android.synthetic.main.activity_start.*
 
 
@@ -57,6 +61,7 @@ class StartActivity : AppCompatActivity() {
         sliderAdapter = SliderAdapter(this)
         binding.viewPager.adapter = sliderAdapter
 
+        binding.backBtn.text = ""
         addDots(0)
 
         binding.backBtn.setOnClickListener {
@@ -71,8 +76,9 @@ class StartActivity : AppCompatActivity() {
                     binding.viewPager.currentItem = mCurrentPage + 1
                 }
                 2 -> {
-                    val intent = Intent(this,MainActivity::class.java)
-                    startActivity(intent)
+
+                    Pref.putBoolean(PrefKeys.isOnBoarding,true)
+                    startActivity(Intent(this,LoginActivity::class.java))
                 }
             }
         }
@@ -92,15 +98,15 @@ class StartActivity : AppCompatActivity() {
 
                 when (position) {
                     0 -> {
-                        backBtn.visibility = View.GONE
+                        binding.backBtn.text = ""
                         nextBtn.text = "Next"
                     }
                     1 -> {
-                        backBtn.visibility = View.VISIBLE
+                        binding.backBtn.text = "Back"
                         nextBtn.text = "Next"
                     }
                     2 -> {
-                        backBtn.visibility = View.VISIBLE
+                        binding.backBtn.text = "Back"
                         nextBtn.text = "Finish"
                     }
                 }

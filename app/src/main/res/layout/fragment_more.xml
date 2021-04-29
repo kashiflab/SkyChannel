@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.more.MoreFragment">
+
+    <LinearLayout
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <RelativeLayout
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileCircleImageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@color/imageBorderColor"
+            android:src="@drawable/avatar"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kapil Mohan"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/contentTextColor"
+            android:layout_toRightOf="@id/profileCircleImageView"
+            android:layout_marginTop="20dp"/>
+
+        <TextView
+            android:id="@+id/coins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit personal details"
+            android:textSize="16sp"
+            android:textColor="#5D5C5C"
+            android:layout_below="@id/username"
+            android:layout_toRightOf="@id/profileCircleImageView"/>
+
+    </RelativeLayout>
+        <TextView
+            android:layout_marginTop="20dp"
+            android:textColor="@color/contentTextColor"
+            android:padding="5dp"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="General"/>
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:padding="5dp"
+            android:id="@+id/darkMode"
+            android:layout_marginTop="10dp"
+            android:text="Dark Mode"
+            android:textStyle="bold"
+            android:textColor="@color/contentTextColor"
+            android:drawableStart="@drawable/ic_dark_mode"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:text="Notifications"
+            android:textStyle="bold"
+            android:textColor="@color/contentTextColor"
+            android:drawableStart="@drawable/ic_notifications"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:textColor="@color/contentTextColor"
+            android:padding="5dp"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Subscription"/>
+        <TextView
+            android:gravity="start|center"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/contentTextColor"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Buy Points"
+            app:drawableStartCompat="@drawable/ic_buy"
+            app:drawableEndCompat="@drawable/ic_baseline_arrow_forward_ios_24" />
+        <TextView
+            android:gravity="start|center"
+            app:drawableEndCompat="@drawable/ic_baseline_arrow_forward_ios_24"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/contentTextColor"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="VIP Membership"
+            app:drawableStartCompat="@drawable/ic_vip" />
+        <TextView
+            android:gravity="start|center"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/contentTextColor"
+            android:padding="5dp"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Other" />
+        <TextView
+            android:gravity="start|center"
+            app:drawableEndCompat="@drawable/ic_baseline_arrow_forward_ios_24"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/contentTextColor"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Feedback"
+            app:drawableStartCompat="@drawable/ic_feedback" />
+        <TextView
+            android:gravity="start|center"
+            app:drawableEndCompat="@drawable/ic_baseline_arrow_forward_ios_24"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/contentTextColor"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Share"
+            app:drawableStartCompat="@drawable/ic_sharing" />
+
+        <TextView
+            android:gravity="start|center"
+            app:drawableEndCompat="@drawable/ic_baseline_arrow_forward_ios_24"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/contentTextColor"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Privacy Policy"
+            app:drawableStartCompat="@drawable/ic_privacy_policy" />
+
+        <TextView
+            android:id="@+id/logout"
+            android:gravity="start|center"
+            app:drawableEndCompat="@drawable/ic_baseline_arrow_forward_ios_24"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/contentTextColor"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            app:drawableStartCompat="@drawable/ic_logout" />
+
+
+    </LinearLayout>
+</ScrollView>

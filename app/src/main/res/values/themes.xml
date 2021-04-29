@@ -22,4 +22,6 @@
     <style name="Theme.SkyChannel.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.SkyChannel.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
 </resources>

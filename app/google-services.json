@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "229285991676",
+    "firebase_url": "https://skychannel-cbc47-default-rtdb.firebaseio.com",
+    "project_id": "skychannel-cbc47",
+    "storage_bucket": "skychannel-cbc47.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:229285991676:android:6602cb49d97fd5bfa97379",
+        "android_client_info": {
+          "package_name": "com.inventerit.skychannel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "229285991676-psqs4t708ig0d59pntd9ed1lmra4j8j6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inventerit.skychannel",
+            "certificate_hash": "aababec64513670897f61436d789ec04959bbdb8"
+          }
+        },
+        {
+          "client_id": "229285991676-f324n9b1aht94jnr1qaebd6s949o63ov.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCITyKiDmqJevdsrmkojCrRJEhx97TUBtw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "229285991676-f324n9b1aht94jnr1qaebd6s949o63ov.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

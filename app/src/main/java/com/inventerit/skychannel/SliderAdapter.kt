@@ -20,21 +20,21 @@ class SliderAdapter(context: Context): PagerAdapter() {
     private var layoutInflater: LayoutInflater? = null
 
     private var images: IntArray = intArrayOf(
-        R.drawable.ic_menu_camera,
-        R.drawable.ic_menu_gallery,
-        R.drawable.ic_menu_slideshow
+        R.drawable.ic_subscribe,
+        R.drawable.ic_campaign,
+        R.drawable.ic_campaign
     )
 
     private var heading = arrayOf(
-        "Title 1",
-        "Title 2",
-        "Title 3"
+        "Subscribe",
+        "Run Campaign",
+        "Campaign Progress"
     )
 
     private var description = arrayOf(
-        "Here is the sample description",
-        "Here is the sample description",
-        "Here is the sample description"
+        "Subscribe, view and like other channel to earn coins",
+        "Use coins to run campaigns for your channel",
+        "Check the progress of your campaigns"
     )
 
     override fun getCount(): Int {

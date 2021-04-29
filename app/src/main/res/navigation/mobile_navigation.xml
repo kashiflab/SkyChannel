@@ -3,23 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_subscribe">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.inventerit.skychannel.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/nav_subscribe"
+        android:name="com.inventerit.skychannel.ui.subscribe.SubscribeFragment"
+        android:label="@string/subscribe"
+        tools:layout="@layout/fragment_subscribe" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.inventerit.skychannel.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_like"
+        android:name="com.inventerit.skychannel.ui.like.LikeFragment"
+        android:label="@string/like"
+        tools:layout="@layout/fragment_like" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.inventerit.skychannel.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_view"
+        android:name="com.inventerit.skychannel.ui.view.ViewFragment"
+        android:label="@string/view"
+        tools:layout="@layout/fragment_view" />
+
+    <fragment
+        android:id="@+id/nav_campaign"
+        android:name="com.inventerit.skychannel.ui.campaign.CampaignFragment"
+        android:label="@string/campaign"
+        tools:layout="@layout/fragment_campaign" />
+
+    <fragment
+        android:id="@+id/nav_more"
+        android:name="com.inventerit.skychannel.ui.more.MoreFragment"
+        android:label="@string/more"
+        tools:layout="@layout/fragment_more" />
+
 </navigation>
