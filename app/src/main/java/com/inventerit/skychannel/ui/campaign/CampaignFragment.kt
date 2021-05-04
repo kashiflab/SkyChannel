@@ -1,28 +1,53 @@
 package com.inventerit.skychannel.ui.campaign
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.button.MaterialButton
+import com.inventerit.skychannel.Adapter.CampaignAdapter
 import com.inventerit.skychannel.R
+import com.inventerit.skychannel.interfaces.OnGetCampaign
+import com.inventerit.skychannel.activities.AddCampaignActivity
 import com.inventerit.skychannel.databinding.FragmentCampaignBinding
-import com.inventerit.skychannel.databinding.FragmentSubscribeBinding
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.inventerit.skychannel.model.Campaign
+import com.inventerit.skychannel.viewModel.MainViewModel
 
 class CampaignFragment : Fragment() {
 
 
     private lateinit var binding: FragmentCampaignBinding
+    private var adapter: CampaignAdapter? = null
 
-    private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(context,R.anim.rotate_open_anim) }
-    private val rotateClose: Animation by lazy { AnimationUtils.loadAnimation(context,R.anim.rotate_close_anim) }
-    private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(context,R.anim.from_bottom_anim) }
-    private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(context,R.anim.to_bottom_anim) }
+    private var dialoge: AlertDialog? = null
+
+    private lateinit var mainViewModel: MainViewModel
+
+    private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(
+        context,
+        R.anim.rotate_open_anim
+    ) }
+    private val rotateClose: Animation by lazy { AnimationUtils.loadAnimation(
+        context,
+        R.anim.rotate_close_anim
+    ) }
+    private val fromBottom: Animation by lazy { AnimationUtils.loadAnimation(
+        context,
+        R.anim.from_bottom_anim
+    ) }
+    private val toBottom: Animation by lazy { AnimationUtils.loadAnimation(
+        context,
+        R.anim.to_bottom_anim
+    ) }
 
     private var isClicked = false
 
@@ -34,16 +59,34 @@ class CampaignFragment : Fragment() {
 
         binding = FragmentCampaignBinding.inflate(layoutInflater)
 
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+
+        binding.campaignRV.layoutManager = LinearLayoutManager(context)
+        binding.campaignRV.setHasFixedSize(true)
+
+        mainViewModel.getUserCampaigns(object : OnGetCampaign<List<Campaign>> {
+            override fun onGetCampaign(status: Boolean, result: List<Campaign>) {
+                if (status) {
+                    adapter = CampaignAdapter(requireActivity(), result)
+                    binding.campaignRV.adapter = adapter
+                    binding.notFound.visibility = View.GONE
+                } else {
+                    binding.notFound.visibility = View.VISIBLE
+                }
+            }
+
+        })
+
         binding.like.setOnClickListener {
-            Toast.makeText(context,"Coming Soon",Toast.LENGTH_LONG).show()
+            showDialog("1")
         }
 
         binding.subscribe.setOnClickListener {
-            Toast.makeText(context,"Coming Soon",Toast.LENGTH_LONG).show()
+            showDialog("0")
         }
 
         binding.view.setOnClickListener {
-            Toast.makeText(context,"Coming Soon",Toast.LENGTH_LONG).show()
+            showDialog("2")
         }
 
         binding.mainFab.setOnClickListener {
@@ -51,6 +94,35 @@ class CampaignFragment : Fragment() {
         }
         return binding.root
     }
+
+    fun showDialog(type: String){
+
+        // custom dialog
+        val view: View = LayoutInflater.from(context)
+            .inflate(R.layout.create_campaign_dialog, null)
+        dialoge = AlertDialog.Builder(context)
+            .setView(view)
+            .create()
+
+        val etLink = view.findViewById<EditText>(R.id.link)
+        val addBtn = view.findViewById<MaterialButton>(R.id.addVideo)
+
+        addBtn.setOnClickListener{
+            val link = etLink.text.toString()
+            if(link.isNotEmpty()) {
+                startActivity(
+                    Intent(context, AddCampaignActivity::class.java)
+                        .putExtra("link", link).putExtra("type", type)
+                )
+                dialoge?.hide()
+            }else{
+                Toast.makeText(context,"Video link is required",Toast.LENGTH_LONG).show()
+            }
+        }
+
+        dialoge?.show()
+    }
+
 
     private fun onMainFabClicked() {
         setVisibility(isClicked)

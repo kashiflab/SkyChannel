@@ -1,4 +1,4 @@
-package com.inventerit.skychannel
+package com.inventerit.skychannel.Adapter
 
 import android.app.Activity
 import android.content.Context
@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
+import com.inventerit.skychannel.R
 
 class SliderAdapter(context: Context): PagerAdapter() {
 
@@ -20,9 +21,9 @@ class SliderAdapter(context: Context): PagerAdapter() {
     private var layoutInflater: LayoutInflater? = null
 
     private var images: IntArray = intArrayOf(
-        R.drawable.ic_subscribe,
-        R.drawable.ic_campaign,
-        R.drawable.ic_campaign
+            R.drawable.ic_subscribe,
+            R.drawable.ic_campaign,
+            R.drawable.ic_campaign
     )
 
     private var heading = arrayOf(

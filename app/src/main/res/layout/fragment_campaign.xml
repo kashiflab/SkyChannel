@@ -6,6 +6,26 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/notFound"
+        android:text="No Campaign is in progress"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/contentTextColor"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/campaignRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        fab:layout_constraintBottom_toBottomOf="parent"
+        fab:layout_constraintEnd_toEndOf="parent"
+        fab:layout_constraintStart_toStartOf="parent"
+        fab:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/mainFab"
         android:layout_marginEnd="16dp"

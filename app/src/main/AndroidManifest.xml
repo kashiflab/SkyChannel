@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.inventerit.skychannel">
 
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.NETWORK" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".MyApp"
         android:allowBackup="true"
@@ -10,24 +15,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SkyChannel">
-        <activity android:name=".SplashActivity"
+        <activity android:name=".activities.AddCampaignActivity"></activity>
+        <activity
+            android:name=".activities.SplashActivity"
             android:theme="@style/Theme.SkyChannel.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".LoginActivity"
+        <activity
+            android:name=".activities.LoginActivity"
             android:theme="@style/Theme.SkyChannel.NoActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/title_activity_main" />
         <activity
-            android:name=".StartActivity"
-            android:theme="@style/Theme.SkyChannel.NoActionBar">
-        </activity>
+            android:name=".activities.StartActivity"
+            android:theme="@style/Theme.SkyChannel.NoActionBar"></activity>
     </application>
 
 </manifest>

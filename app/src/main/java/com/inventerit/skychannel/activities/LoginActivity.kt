@@ -1,4 +1,4 @@
-package com.inventerit.skychannel
+package com.inventerit.skychannel.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,17 +9,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.inventerit.skychannel.R
+import com.inventerit.skychannel.Utils
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.databinding.ActivityLoginBinding
 import com.tramsun.libs.prefcompat.Pref
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class LoginActivity : AppCompatActivity() {
     companion object {
@@ -46,10 +48,12 @@ class LoginActivity : AppCompatActivity() {
 //            startActivity(Intent(this,MainActivity::class.java))
         }
 
+        val scopes = Scope("https://www.googleapis.com/auth/youtube")
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
+            .requestScopes(scopes)
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
@@ -75,6 +79,7 @@ class LoginActivity : AppCompatActivity() {
                     val account = task.getResult(ApiException::class.java)!!
                     Log.d("SignInActivity", "firebaseAuthWithGoogle:" + account.id)
                     firebaseAuthWithGoogle(account.idToken!!)
+
                 } catch (e: ApiException) {
                     Utils.hidepDialog()
                     // Google Sign In failed, update UI appropriately

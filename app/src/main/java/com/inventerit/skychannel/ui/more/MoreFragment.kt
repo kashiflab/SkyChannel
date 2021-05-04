@@ -11,11 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
-import com.inventerit.skychannel.LoginActivity
-import com.inventerit.skychannel.`interface`.OnComplete
+import com.inventerit.skychannel.activities.LoginActivity
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.databinding.FragmentMoreBinding
-import com.inventerit.skychannel.model.User
 import com.inventerit.skychannel.viewModel.MainViewModel
 import com.tramsun.libs.prefcompat.Pref
 
@@ -62,7 +60,7 @@ class MoreFragment : Fragment() {
 
         binding.logout.setOnClickListener {
             mAtuh.signOut()
-            startActivity(Intent(context,LoginActivity::class.java))
+            startActivity(Intent(context, LoginActivity::class.java))
             requireActivity().finish()
         }
     }

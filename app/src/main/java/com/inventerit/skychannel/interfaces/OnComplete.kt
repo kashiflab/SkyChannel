@@ -1,4 +1,4 @@
-package com.inventerit.skychannel.`interface`
+package com.inventerit.skychannel.interfaces
 
 import com.inventerit.skychannel.model.User
 

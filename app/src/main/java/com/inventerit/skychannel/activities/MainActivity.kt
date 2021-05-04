@@ -1,4 +1,4 @@
-package com.inventerit.skychannel
+package com.inventerit.skychannel.activities
 
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -8,7 +8,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.inventerit.skychannel.`interface`.OnComplete
+import com.inventerit.skychannel.R
+import com.inventerit.skychannel.interfaces.OnComplete
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.model.User
 import com.inventerit.skychannel.viewModel.MainViewModel
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_subscribe, R.id.nav_like, R.id.nav_view, R.id.nav_campaign, R.id.nav_more
+                    R.id.nav_subscribe, R.id.nav_like, R.id.nav_view, R.id.nav_campaign, R.id.nav_more
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

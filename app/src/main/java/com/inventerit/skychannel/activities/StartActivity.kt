@@ -1,11 +1,8 @@
-package com.inventerit.skychannel
+package com.inventerit.skychannel.activities
 
 import android.content.Intent
-import android.content.res.Resources
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.text.Html
 import android.view.View
 import android.view.WindowInsets
@@ -14,8 +11,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
-import com.google.firebase.auth.FirebaseAuth
+import com.inventerit.skychannel.Adapter.SliderAdapter
+import com.inventerit.skychannel.R
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.databinding.ActivityStartBinding
 import com.tramsun.libs.prefcompat.Pref
@@ -27,7 +24,7 @@ class StartActivity : AppCompatActivity() {
 
     private lateinit var mDots: Array<TextView?>
     private lateinit var binding: ActivityStartBinding
-    private var sliderAdapter:SliderAdapter? = null
+    private var sliderAdapter: SliderAdapter? = null
 
     private var mCurrentPage: Int = 0
 
@@ -78,7 +75,7 @@ class StartActivity : AppCompatActivity() {
                 2 -> {
 
                     Pref.putBoolean(PrefKeys.isOnBoarding,true)
-                    startActivity(Intent(this,LoginActivity::class.java))
+                    startActivity(Intent(this, LoginActivity::class.java))
                 }
             }
         }
@@ -127,13 +124,13 @@ class StartActivity : AppCompatActivity() {
                 mDots[i]?.text = Html.fromHtml("&#8226")
             }
             mDots[i]?.textSize = 35f
-            mDots[i]?.setTextColor(ContextCompat.getColor(this,R.color.teal_200))
+            mDots[i]?.setTextColor(ContextCompat.getColor(this, R.color.teal_200))
 
             binding.dotsLayout.addView(mDots[i])
         }
 
         if(mDots.isNotEmpty()){
-            mDots[i]?.setTextColor(ContextCompat.getColor(this,R.color.white))
+            mDots[i]?.setTextColor(ContextCompat.getColor(this, R.color.white))
         }
     }
 

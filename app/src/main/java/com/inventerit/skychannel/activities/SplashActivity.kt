@@ -1,4 +1,4 @@
-package com.inventerit.skychannel
+package com.inventerit.skychannel.activities
 
 import android.content.Intent
 import android.os.Build
@@ -11,12 +11,15 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.auth.FirebaseAuth
+import com.inventerit.skychannel.R
 import com.inventerit.skychannel.constant.PrefKeys
+import com.tbruyelle.rxpermissions3.RxPermissions
 import com.tramsun.libs.prefcompat.Pref
 
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var rx: RxPermissions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +30,12 @@ class SplashActivity : AppCompatActivity() {
         setFullScreen()
 
         mAuth = FirebaseAuth.getInstance()
+        rx = RxPermissions(this)
+        askPermission()
+
+    }
+
+    private fun goToNextActivity(){
         val user = mAuth.currentUser
 
         val isOnBoarding = Pref.getBoolean(PrefKeys.isOnBoarding,false)
@@ -34,17 +43,31 @@ class SplashActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
 
             if(isOnBoarding) {
-                    if (user != null) {
-                        startActivity(Intent(this, MainActivity::class.java))
-                    } else {
-                        startActivity(Intent(this, LoginActivity::class.java))
-                    }
+                if (user != null) {
+                    startActivity(Intent(this, MainActivity::class.java))
+                } else {
+                    startActivity(Intent(this, LoginActivity::class.java))
+                }
             }else{
                 startActivity(Intent(this, StartActivity::class.java))
             }
 
         }, 3000)
     }
+
+
+    private fun askPermission(){
+        rx.request(android.Manifest.permission.GET_ACCOUNTS, android.Manifest.permission.INTERNET)
+                .subscribe{granted ->
+                    if (granted) {
+                        goToNextActivity()
+                    } else {
+                        askPermission()
+                    }
+                }
+    }
+
+
     private fun setFullScreen() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setDecorFitsSystemWindows(false)

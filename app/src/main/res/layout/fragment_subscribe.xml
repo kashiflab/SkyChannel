@@ -15,8 +15,7 @@ tools:context=".ui.subscribe.SubscribeFragment">
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        app:layout_constraintBottom_toTopOf="@id/materialCardView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@color/cardBgColor"
@@ -47,7 +46,7 @@ tools:context=".ui.subscribe.SubscribeFragment">
             android:layout_width="match_parent"
             app:showSeekBar="false"
             app:showFullScreenButton="false"
-            android:layout_height="300dp"
+            android:layout_height="400dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -77,6 +76,7 @@ tools:context=".ui.subscribe.SubscribeFragment">
         app:cardBackgroundColor="@color/cardBgColor"
         app:cardCornerRadius="20dp"
         app:contentPadding="10dp"
+        app:layout_constraintBottom_toTopOf="@id/subscribe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/videoLayout">
