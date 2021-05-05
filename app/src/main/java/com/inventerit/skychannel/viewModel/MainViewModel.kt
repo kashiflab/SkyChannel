@@ -3,10 +3,7 @@ package com.inventerit.skychannel.viewModel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.inventerit.skychannel.MainRepository
-import com.inventerit.skychannel.interfaces.OnCampaignAdded
-import com.inventerit.skychannel.interfaces.OnComplete
-import com.inventerit.skychannel.interfaces.OnGetCampaign
-import com.inventerit.skychannel.interfaces.OnVideoDetails
+import com.inventerit.skychannel.interfaces.*
 import com.inventerit.skychannel.model.Api
 import com.inventerit.skychannel.model.Campaign
 import com.inventerit.skychannel.model.User
@@ -33,5 +30,13 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     fun getVideoDetails(video_id: String, onVideoDetails: OnVideoDetails<Api>){
         myRepo.getVideoDetails(video_id,onVideoDetails)
+    }
+
+    fun updateCoins(coins: String, onLike: LikeListener){
+        myRepo.updateCoins(coins,onLike)
+    }
+
+    fun updateCampaignStatus(campaignId: String, campaignNumber: String, onCampaignStatus: OnCampaignStatus){
+        myRepo.updateCampaignStatus(campaignId,campaignNumber,onCampaignStatus)
     }
 }

@@ -8,11 +8,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.inventerit.skychannel.ApiService.APIService
-import com.inventerit.skychannel.interfaces.OnCampaignAdded
-import com.inventerit.skychannel.interfaces.OnComplete
-import com.inventerit.skychannel.interfaces.OnGetCampaign
-import com.inventerit.skychannel.interfaces.OnVideoDetails
 import com.inventerit.skychannel.constant.Constants
+import com.inventerit.skychannel.interfaces.*
 import com.inventerit.skychannel.model.Api
 import com.inventerit.skychannel.model.Campaign
 import com.inventerit.skychannel.model.User
@@ -46,6 +43,35 @@ class MainRepository {
 
     init {
         mUser = mAuth.currentUser
+    }
+
+    fun updateCampaignStatus(campaignId: String, campaignNumber: String, onCampaignStatus: OnCampaignStatus){
+        val map: HashMap<String, Any> = HashMap()
+
+        map[Constants.current_number] = campaignNumber
+
+        database.child(Constants.campaigns).child(campaignId).updateChildren(map).addOnCompleteListener {
+            if(it.isSuccessful){
+                onCampaignStatus.onCampaignStatus(true)
+            }else{
+                onCampaignStatus.onCampaignStatus(false)
+            }
+        }
+    }
+
+    fun updateCoins(coins: String, onLike: LikeListener){
+        onLike.onLikeStarted()
+        val map: HashMap<String,Any> = HashMap()
+
+        map[Constants.coins] = coins
+
+        database.child(Constants.users).child(mUser.uid).updateChildren(map).addOnCompleteListener {
+            if(it.isSuccessful){
+                onLike.onLikedSuccess()
+            }else{
+                onLike.onLikedFailed()
+            }
+        }
     }
 
     fun getVideoDetails(video_id: String, onVideoDetails: OnVideoDetails<Api>){

@@ -7,6 +7,7 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,8 @@ import com.inventerit.skychannel.Utils
 import com.inventerit.skychannel.YouTubeActivityPresenter
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.databinding.FragmentSubscribeBinding
+import com.inventerit.skychannel.interfaces.LikeListener
+import com.inventerit.skychannel.interfaces.OnCampaignStatus
 import com.inventerit.skychannel.interfaces.OnGetCampaign
 import com.inventerit.skychannel.interfaces.YouTubeActivityView
 import com.inventerit.skychannel.model.Campaign
@@ -64,6 +67,8 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
     val REQUEST_PERMISSION_GET_ACCOUNTS = 1003
     private val RC_SIGN_IN = 12311
 
+    private var coins: String = ""
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -77,6 +82,8 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
         mCredential = GoogleAccountCredential.usingOAuth2(
                 requireActivity(), listOf(YouTubeScopes.YOUTUBE))
                 .setBackOff(ExponentialBackOff())
+
+        coins = Pref.getString(PrefKeys.coins)
 
         mainViewModel.getAllCampaigns(object : OnGetCampaign<List<Campaign>> {
             override fun onGetCampaign(status: Boolean, result: List<Campaign>) {
@@ -231,6 +238,45 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
     override fun onSubscribetionSuccess(title: String?) {
         hidepDialog()
         Toast.makeText(requireActivity(), "Successfully subscribe to $title", Toast.LENGTH_SHORT).show()
+        updateUserCoins()
+        updateCampaignStatus()
+    }
+
+    private fun updateCampaignStatus() {
+        val campaignId = campaign?.get(currentNumber)?.id.toString()
+        val campaignNumber = (campaign?.get(currentNumber)?.current_number?.toInt()?.plus(1)).toString()
+
+        mainViewModel.updateCampaignStatus(campaignId,campaignNumber,object: OnCampaignStatus{
+            override fun onCampaignStatus(status: Boolean) {
+                if(status){
+                    Log.i(TAG,"Campaign status increased")
+                }else{
+                    Log.i(TAG,"Campaign Status not increased")
+                }
+            }
+        })
+
+    }
+
+    private fun updateUserCoins(){
+
+        val updatedCoins = (coins.toInt() + 130).toString()
+        mainViewModel.updateCoins(updatedCoins, object : LikeListener{
+            override fun onLikeStarted() {
+                Log.i(TAG,"Updating Coins")
+            }
+
+            override fun onLikedSuccess() {
+                Pref.putString(PrefKeys.coins,updatedCoins)
+                Log.i(TAG,"Coins are updated")
+            }
+
+            override fun onLikedFailed() {
+
+                Log.i(TAG,"Coins are not updated")
+            }
+
+        })
     }
 
     override fun onSubscribetionFail() {

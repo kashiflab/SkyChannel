@@ -111,6 +111,7 @@ class AddCampaignActivity : AppCompatActivity() {
                                 "Campaign Started",
                                 Toast.LENGTH_LONG
                             ).show()
+                            finish()
                         } else {
                             Toast.makeText(
                                 this@AddCampaignActivity,
