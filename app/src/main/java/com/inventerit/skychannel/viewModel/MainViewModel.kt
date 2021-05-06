@@ -20,6 +20,22 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
         myRepo.saveCampaign(campaign,onCampaignAdded)
     }
 
+    fun getSubsCampaigns(onGetCampaign: OnGetCampaign<List<Campaign>>){
+        myRepo.getSubsCampaigns(onGetCampaign)
+    }
+
+    fun getLikesCampaigns(onGetCampaign: OnGetCampaign<List<Campaign>>){
+        myRepo.getLikesCampaigns(onGetCampaign)
+    }
+
+    fun getViewsCampaigns(onGetCampaign: OnGetCampaign<List<Campaign>>){
+        myRepo.getViewsCampaigns(onGetCampaign)
+    }
+
+    fun getCommentsCampaigns(onGetCampaign: OnGetCampaign<List<Campaign>>){
+        myRepo.getSubsCampaigns(onGetCampaign)
+    }
+
     fun getAllCampaigns(onGetCampaign: OnGetCampaign<List<Campaign>>){
         myRepo.getAllCampaigns(onGetCampaign)
     }

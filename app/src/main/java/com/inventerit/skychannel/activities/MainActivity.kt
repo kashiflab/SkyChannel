@@ -13,11 +13,12 @@ import com.inventerit.skychannel.interfaces.OnComplete
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.model.User
 import com.inventerit.skychannel.viewModel.MainViewModel
+import com.tbruyelle.rxpermissions3.RxPermissions
 import com.tramsun.libs.prefcompat.Pref
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var mainViewModel: MainViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

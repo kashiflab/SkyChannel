@@ -56,7 +56,7 @@ class MoreFragment : Fragment() {
 
         Glide.with(requireActivity()).load(photoUrl).into(binding.profileCircleImageView)
         binding.username.text = username
-        binding.coins.text = coins + " Coins"
+        binding.coins.text = "$coins Coins"
 
         binding.logout.setOnClickListener {
             mAtuh.signOut()

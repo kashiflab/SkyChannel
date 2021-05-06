@@ -62,9 +62,9 @@
             android:text="45"
             android:textColor="@color/contentTextColor"
             android:textSize="14sp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/views"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/views"
             app:layout_constraintTop_toTopOf="@+id/views" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator

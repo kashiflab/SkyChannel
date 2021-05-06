@@ -54,6 +54,7 @@
 
     </RelativeLayout>
         <TextView
+            android:visibility="gone"
             android:layout_marginTop="20dp"
             android:textColor="@color/contentTextColor"
             android:padding="5dp"
@@ -63,6 +64,7 @@
             android:text="General"/>
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:padding="5dp"
+            android:visibility="gone"
             android:id="@+id/darkMode"
             android:layout_marginTop="10dp"
             android:text="Dark Mode"
@@ -75,6 +77,7 @@
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:padding="5dp"
+            android:visibility="gone"
             android:layout_marginTop="10dp"
             android:text="Notifications"
             android:textStyle="bold"

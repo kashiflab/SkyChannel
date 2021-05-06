@@ -9,11 +9,13 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.inventerit.skychannel.ApiService.APIService
 import com.inventerit.skychannel.constant.Constants
+import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.interfaces.*
 import com.inventerit.skychannel.model.Api
 import com.inventerit.skychannel.model.Campaign
 import com.inventerit.skychannel.model.User
 import com.inventerit.skychannel.retrofit.ApiUtils
+import com.tramsun.libs.prefcompat.Pref
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,6 +69,7 @@ class MainRepository {
 
         database.child(Constants.users).child(mUser.uid).updateChildren(map).addOnCompleteListener {
             if(it.isSuccessful){
+                Pref.putString(PrefKeys.coins,coins)
                 onLike.onLikedSuccess()
             }else{
                 onLike.onLikedFailed()
@@ -76,7 +79,7 @@ class MainRepository {
 
     fun getVideoDetails(video_id: String, onVideoDetails: OnVideoDetails<Api>){
         apiService = ApiUtils.getAPIService()
-        apiService?.getVideoDetails("snippet", video_id, Constants.DATA_API_KEY)
+        apiService?.getVideoDetails("snippet,contentDetails", video_id, Constants.DATA_API_KEY)
             ?.enqueue(object : Callback<Api> {
                 override fun onResponse(call: Call<Api>, response: Response<Api>) {
                     if (response.isSuccessful) {
@@ -231,28 +234,279 @@ class MainRepository {
                 })
     }
 
+    fun getViewsCampaigns(onGetCampaign: OnGetCampaign<List<Campaign>>){
+        val campaignList: MutableList<Campaign> = ArrayList()
+
+        database.child(Constants.campaigns).get().addOnCompleteListener {
+            if(it.isSuccessful){
+                if(!campaignList.isNullOrEmpty()){
+                    campaignList.clear()
+                }
+                for(snapshot1 in it.result?.children!!){
+                    if(snapshot1.child(Constants.user_id).value.toString() != mUser.uid &&
+                            snapshot1.child(Constants.type).value.toString().toInt() == Constants.VIEW_TYPE) {
+                        val campaign = Campaign()
+                        campaign.id = snapshot1.child(Constants.id).value.toString()
+                        campaign.video_id = snapshot1.child(Constants.video_id).value.toString()
+                        campaign.video_title =
+                                snapshot1.child(Constants.video_title).value.toString()
+                        campaign.user_id = snapshot1.child(Constants.user_id).value.toString()
+                        campaign.current_number =
+                                snapshot1.child(Constants.current_number).value.toString()
+                        campaign.total_number =
+                                snapshot1.child(Constants.total_number).value.toString()
+                        campaign.total_coins =
+                                snapshot1.child(Constants.total_coins).value.toString()
+                        campaign.total_time = snapshot1.child(Constants.total_time).value.toString()
+                        campaign.status = snapshot1.child(Constants.status).value.toString()
+                        campaign.created_at = snapshot1.child(Constants.created_at).value.toString()
+                        campaign.type = snapshot1.child(Constants.type).value.toString()
+                        campaign.channel_id = snapshot1.child(Constants.channel_id).value.toString()
+                        campaignList.add(campaign)
+                    }
+                }
+                if(campaignList.isNotEmpty()) {
+                    onGetCampaign.onGetCampaign(true, campaignList)
+                }else{
+                    onGetCampaign.onGetCampaign(false, campaignList)
+                }
+            }else{
+                onGetCampaign.onGetCampaign(false, campaignList)
+            }
+        }
+
+//        database.child(Constants.campaigns).addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                if(!campaignList.isNullOrEmpty()){
+//                    campaignList.clear()
+//                }
+//                for(snapshot1 in snapshot.children){
+//                    if(snapshot1.child(Constants.user_id).value.toString() != mUser.uid &&
+//                        snapshot1.child(Constants.type).value.toString().toInt() == Constants.VIEW_TYPE) {
+//                        val campaign = Campaign()
+//                        campaign.id = snapshot1.child(Constants.id).value.toString()
+//                        campaign.video_id = snapshot1.child(Constants.video_id).value.toString()
+//                        campaign.video_title =
+//                            snapshot1.child(Constants.video_title).value.toString()
+//                        campaign.user_id = snapshot1.child(Constants.user_id).value.toString()
+//                        campaign.current_number =
+//                            snapshot1.child(Constants.current_number).value.toString()
+//                        campaign.total_number =
+//                            snapshot1.child(Constants.total_number).value.toString()
+//                        campaign.total_coins =
+//                            snapshot1.child(Constants.total_coins).value.toString()
+//                        campaign.total_time = snapshot1.child(Constants.total_time).value.toString()
+//                        campaign.status = snapshot1.child(Constants.status).value.toString()
+//                        campaign.created_at = snapshot1.child(Constants.created_at).value.toString()
+//                        campaign.type = snapshot1.child(Constants.type).value.toString()
+//                        campaign.channel_id = snapshot1.child(Constants.channel_id).value.toString()
+//                        campaignList.add(campaign)
+//                    }
+//                }
+//                if(campaignList.isNotEmpty()) {
+//                    onGetCampaign.onGetCampaign(true, campaignList)
+//                }else{
+//                    onGetCampaign.onGetCampaign(false, campaignList)
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                onGetCampaign.onGetCampaign(false, campaignList)
+//            }
+//        })
+    }
+
+    fun getLikesCampaigns(onGetCampaign: OnGetCampaign<List<Campaign>>){
+        val campaignList: MutableList<Campaign> = ArrayList()
+
+        database.child(Constants.campaigns).get().addOnCompleteListener {
+            if(it.isSuccessful){
+                if(!campaignList.isNullOrEmpty()){
+                    campaignList.clear()
+                }
+                for(snapshot1 in it.result?.children!!){
+                    if(snapshot1.child(Constants.user_id).value.toString() != mUser.uid &&
+                            snapshot1.child(Constants.type).value.toString().toInt() == Constants.LIKE_TYPE) {
+                        val campaign = Campaign()
+                        campaign.id = snapshot1.child(Constants.id).value.toString()
+                        campaign.video_id = snapshot1.child(Constants.video_id).value.toString()
+                        campaign.video_title =
+                                snapshot1.child(Constants.video_title).value.toString()
+                        campaign.user_id = snapshot1.child(Constants.user_id).value.toString()
+                        campaign.current_number =
+                                snapshot1.child(Constants.current_number).value.toString()
+                        campaign.total_number =
+                                snapshot1.child(Constants.total_number).value.toString()
+                        campaign.total_coins =
+                                snapshot1.child(Constants.total_coins).value.toString()
+                        campaign.total_time = snapshot1.child(Constants.total_time).value.toString()
+                        campaign.status = snapshot1.child(Constants.status).value.toString()
+                        campaign.created_at = snapshot1.child(Constants.created_at).value.toString()
+                        campaign.type = snapshot1.child(Constants.type).value.toString()
+                        campaign.channel_id = snapshot1.child(Constants.channel_id).value.toString()
+                        campaignList.add(campaign)
+                    }
+                }
+                if(campaignList.isNotEmpty()) {
+                    onGetCampaign.onGetCampaign(true, campaignList)
+                }else{
+                    onGetCampaign.onGetCampaign(false, campaignList)
+                }
+            }else{
+                onGetCampaign.onGetCampaign(false, campaignList)
+            }
+        }
+
+//        database.child(Constants.campaigns).addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                if(!campaignList.isNullOrEmpty()){
+//                    campaignList.clear()
+//                }
+//                for(snapshot1 in snapshot.children){
+//                    if(snapshot1.child(Constants.user_id).value.toString() != mUser.uid &&
+//                        snapshot1.child(Constants.type).value.toString().toInt() == Constants.LIKE_TYPE) {
+//                        val campaign = Campaign()
+//                        campaign.id = snapshot1.child(Constants.id).value.toString()
+//                        campaign.video_id = snapshot1.child(Constants.video_id).value.toString()
+//                        campaign.video_title =
+//                            snapshot1.child(Constants.video_title).value.toString()
+//                        campaign.user_id = snapshot1.child(Constants.user_id).value.toString()
+//                        campaign.current_number =
+//                            snapshot1.child(Constants.current_number).value.toString()
+//                        campaign.total_number =
+//                            snapshot1.child(Constants.total_number).value.toString()
+//                        campaign.total_coins =
+//                            snapshot1.child(Constants.total_coins).value.toString()
+//                        campaign.total_time = snapshot1.child(Constants.total_time).value.toString()
+//                        campaign.status = snapshot1.child(Constants.status).value.toString()
+//                        campaign.created_at = snapshot1.child(Constants.created_at).value.toString()
+//                        campaign.type = snapshot1.child(Constants.type).value.toString()
+//                        campaign.channel_id = snapshot1.child(Constants.channel_id).value.toString()
+//                        campaignList.add(campaign)
+//                    }
+//                }
+//                if(campaignList.isNotEmpty()) {
+//                    onGetCampaign.onGetCampaign(true, campaignList)
+//                }else{
+//                    onGetCampaign.onGetCampaign(false, campaignList)
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                onGetCampaign.onGetCampaign(false, campaignList)
+//            }
+//        })
+    }
+
+    fun getSubsCampaigns(onGetCampaign: OnGetCampaign<List<Campaign>>){
+        val campaignList: MutableList<Campaign> = ArrayList()
+
+        database.child(Constants.campaigns).get().addOnCompleteListener {
+            if(it.isSuccessful){
+                if(!campaignList.isNullOrEmpty()){
+                    campaignList.clear()
+                }
+                for(snapshot1 in it.result?.children!!){
+                    if(snapshot1.child(Constants.user_id).value.toString() != mUser.uid &&
+                            snapshot1.child(Constants.type).value.toString().toInt() == Constants.SUBSCRIBE_TYPE) {
+                        val campaign = Campaign()
+                        campaign.id = snapshot1.child(Constants.id).value.toString()
+                        campaign.video_id = snapshot1.child(Constants.video_id).value.toString()
+                        campaign.video_title =
+                                snapshot1.child(Constants.video_title).value.toString()
+                        campaign.user_id = snapshot1.child(Constants.user_id).value.toString()
+                        campaign.current_number =
+                                snapshot1.child(Constants.current_number).value.toString()
+                        campaign.total_number =
+                                snapshot1.child(Constants.total_number).value.toString()
+                        campaign.total_coins =
+                                snapshot1.child(Constants.total_coins).value.toString()
+                        campaign.total_time = snapshot1.child(Constants.total_time).value.toString()
+                        campaign.status = snapshot1.child(Constants.status).value.toString()
+                        campaign.created_at = snapshot1.child(Constants.created_at).value.toString()
+                        campaign.type = snapshot1.child(Constants.type).value.toString()
+                        campaign.channel_id = snapshot1.child(Constants.channel_id).value.toString()
+                        campaignList.add(campaign)
+                    }
+                }
+                if(campaignList.isNotEmpty()) {
+                    onGetCampaign.onGetCampaign(true, campaignList)
+                }else{
+                    onGetCampaign.onGetCampaign(false, campaignList)
+                }
+            }else{
+                onGetCampaign.onGetCampaign(false, campaignList)
+            }
+        }
+//        database.child(Constants.campaigns).addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                if(!campaignList.isNullOrEmpty()){
+//                    campaignList.clear()
+//                }
+//                for(snapshot1 in snapshot.children){
+//                    if(snapshot1.child(Constants.user_id).value.toString() != mUser.uid &&
+//                            snapshot1.child(Constants.type).value.toString().toInt() == Constants.SUBSCRIBE_TYPE) {
+//                        val campaign = Campaign()
+//                        campaign.id = snapshot1.child(Constants.id).value.toString()
+//                        campaign.video_id = snapshot1.child(Constants.video_id).value.toString()
+//                        campaign.video_title =
+//                            snapshot1.child(Constants.video_title).value.toString()
+//                        campaign.user_id = snapshot1.child(Constants.user_id).value.toString()
+//                        campaign.current_number =
+//                            snapshot1.child(Constants.current_number).value.toString()
+//                        campaign.total_number =
+//                            snapshot1.child(Constants.total_number).value.toString()
+//                        campaign.total_coins =
+//                            snapshot1.child(Constants.total_coins).value.toString()
+//                        campaign.total_time = snapshot1.child(Constants.total_time).value.toString()
+//                        campaign.status = snapshot1.child(Constants.status).value.toString()
+//                        campaign.created_at = snapshot1.child(Constants.created_at).value.toString()
+//                        campaign.type = snapshot1.child(Constants.type).value.toString()
+//                        campaign.channel_id = snapshot1.child(Constants.channel_id).value.toString()
+//                        campaignList.add(campaign)
+//                    }
+//                }
+//                if(campaignList.isNotEmpty()) {
+//                    onGetCampaign.onGetCampaign(true, campaignList)
+//                }else{
+//                    onGetCampaign.onGetCampaign(false, campaignList)
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                onGetCampaign.onGetCampaign(false, campaignList)
+//            }
+//        })
+    }
+
     fun getAllCampaigns(onGetCampaign: OnGetCampaign<List<Campaign>>){
-        var campaignList: MutableList<Campaign> = ArrayList()
+        val campaignList: MutableList<Campaign> = ArrayList()
         database.child(Constants.campaigns).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(!campaignList.isNullOrEmpty()){
                     campaignList.clear()
                 }
                 for(snapshot1 in snapshot.children){
-                    val campaign = Campaign()
-                    campaign.id = snapshot1.child(Constants.id).value.toString()
-                    campaign.video_id = snapshot1.child(Constants.video_id).value.toString()
-                    campaign.video_title = snapshot1.child(Constants.video_title).value.toString()
-                    campaign.user_id = snapshot1.child(Constants.user_id).value.toString()
-                    campaign.current_number = snapshot1.child(Constants.current_number).value.toString()
-                    campaign.total_number = snapshot1.child(Constants.total_number).value.toString()
-                    campaign.total_coins = snapshot1.child(Constants.total_coins).value.toString()
-                    campaign.total_time = snapshot1.child(Constants.total_time).value.toString()
-                    campaign.status = snapshot1.child(Constants.status).value.toString()
-                    campaign.created_at = snapshot1.child(Constants.created_at).value.toString()
-                    campaign.type = snapshot1.child(Constants.type).value.toString()
-                    campaign.channel_id = snapshot1.child(Constants.channel_id).value.toString()
-                    campaignList.add(campaign)
+                    if(snapshot1.child(Constants.user_id).value.toString() != mUser.uid) {
+                        val campaign = Campaign()
+                        campaign.id = snapshot1.child(Constants.id).value.toString()
+                        campaign.video_id = snapshot1.child(Constants.video_id).value.toString()
+                        campaign.video_title =
+                            snapshot1.child(Constants.video_title).value.toString()
+                        campaign.user_id = snapshot1.child(Constants.user_id).value.toString()
+                        campaign.current_number =
+                            snapshot1.child(Constants.current_number).value.toString()
+                        campaign.total_number =
+                            snapshot1.child(Constants.total_number).value.toString()
+                        campaign.total_coins =
+                            snapshot1.child(Constants.total_coins).value.toString()
+                        campaign.total_time = snapshot1.child(Constants.total_time).value.toString()
+                        campaign.status = snapshot1.child(Constants.status).value.toString()
+                        campaign.created_at = snapshot1.child(Constants.created_at).value.toString()
+                        campaign.type = snapshot1.child(Constants.type).value.toString()
+                        campaign.channel_id = snapshot1.child(Constants.channel_id).value.toString()
+                        campaignList.add(campaign)
+                    }
                 }
                 if(campaignList.isNotEmpty()) {
                     onGetCampaign.onGetCampaign(true, campaignList)
@@ -264,6 +518,6 @@ class MainRepository {
             override fun onCancelled(error: DatabaseError) {
                 onGetCampaign.onGetCampaign(false, campaignList)
             }
-        });
+        })
     }
 }

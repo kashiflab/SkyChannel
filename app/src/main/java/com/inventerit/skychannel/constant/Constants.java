@@ -6,6 +6,12 @@ abstract public class Constants {
     public static String users = "users";
     public static String campaigns = "campaigns";
 
+    public static int SUBSCRIBE_TYPE = 0;
+    public static int LIKE_TYPE = 1;
+    public static int VIEW_TYPE = 2;
+    public static int COMMENT_TYPE = 3;
+
+
     //user
     public static String id = "id";
     public static String username = "username";

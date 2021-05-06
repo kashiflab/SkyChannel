@@ -18,6 +18,7 @@ import com.inventerit.skychannel.R
 import com.inventerit.skychannel.Utils
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.databinding.ActivityLoginBinding
+import com.tbruyelle.rxpermissions3.RxPermissions
 import com.tramsun.libs.prefcompat.Pref
 import java.text.SimpleDateFormat
 import java.util.*
@@ -32,6 +33,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var rx: RxPermissions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +45,8 @@ class LoginActivity : AppCompatActivity() {
 
         getUsers()
 
+        rx = RxPermissions(this)
+        askPermission()
         binding.signInBtn.setOnClickListener {
             signIn()
 //            startActivity(Intent(this,MainActivity::class.java))
@@ -58,6 +62,14 @@ class LoginActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
 
+    }
+    private fun askPermission(){
+        rx.request(android.Manifest.permission.GET_ACCOUNTS, android.Manifest.permission.INTERNET)
+                .subscribe{granted ->
+                    if (!granted) {
+                        askPermission()
+                    }
+                }
     }
     private fun signIn() {
         Utils.initpDialog(this, "Please wait...")

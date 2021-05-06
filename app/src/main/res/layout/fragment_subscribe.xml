@@ -42,7 +42,7 @@
 
         <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
             android:id="@+id/video"
-            android:layout_weight="3.3"
+            android:layout_weight="2.9"
             android:layout_width="match_parent"
             app:showSeekBar="false"
             app:showFullScreenButton="false"
@@ -94,8 +94,48 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fontFamily="sans-serif-light"
-            android:text="Subscribe to your favorite channel &amp; get 130 coins.\nDO NOT unsubscribe or cancel like, we will block your account if you unsubscribe any channel."
-            android:textSize="16sp" />
+            android:text="Subscribe to your favorite channel &amp; get coins. DO NOT unsubscribe or cancel like, we will block your account if you unsubscribe any channel."
+            android:textSize="13sp" />
+
+    <LinearLayout
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_weight="0.5"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <TextView
+            android:id="@+id/timer"
+            android:text="0"
+            android:textSize="18sp"
+            android:gravity="start|center"
+            android:drawablePadding="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/contentTextColor"
+            android:drawableLeft="@drawable/ic_adjust"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <View
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/red_500"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/coins"
+            android:text="0"
+            android:textSize="18sp"
+            android:gravity="start|center"
+            android:drawablePadding="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/contentTextColor"
+            android:drawableLeft="@drawable/ic_money_bag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 <!--    </com.google.android.material.card.MaterialCardView>-->
 
@@ -111,7 +151,6 @@
             android:id="@+id/subscribe"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:text="Subscribe"
             android:textAllCaps="false"
             app:layout_constraintEnd_toStartOf="@+id/nextBtn"
@@ -120,7 +159,6 @@
 
         <com.google.android.material.button.MaterialButton
             android:layout_weight="0.5"
-            android:layout_marginTop="10dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             app:layout_constraintStart_toEndOf="@id/subscribe"

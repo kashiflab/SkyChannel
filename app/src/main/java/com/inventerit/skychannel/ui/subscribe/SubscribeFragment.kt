@@ -7,6 +7,7 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +24,6 @@ import com.google.android.gms.common.api.Scope
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.youtube.YouTubeScopes
-import com.inventerit.skychannel.Utils
 import com.inventerit.skychannel.YouTubeActivityPresenter
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.databinding.FragmentSubscribeBinding
@@ -50,17 +50,16 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
     private var counter = 0
 
     private lateinit var mainViewModel: MainViewModel
-    private var currentNumber = 0;
+    private var currentNumber = 0
 
     private var campaign: List<Campaign>? = null
 
     private var mCredential: GoogleAccountCredential? = null
     private var presenter: YouTubeActivityPresenter? = null
 
-    private val PREF_ACCOUNT_NAME = "accountName"
+    private var countDownTimer: CountDownTimer? = null
 
     // if you are using YouTubePlayerView in xml then activity must extend YouTubeBaseActivity
-    private val RECOVERY_DIALOG_REQUEST = 1
     val REQUEST_ACCOUNT_PICKER = 1000
     val REQUEST_AUTHORIZATION = 1001
     val REQUEST_GOOGLE_PLAY_SERVICES = 1002
@@ -83,17 +82,21 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
                 requireActivity(), listOf(YouTubeScopes.YOUTUBE))
                 .setBackOff(ExponentialBackOff())
 
-        coins = Pref.getString(PrefKeys.coins)
+        coins = Pref.getString(PrefKeys.coins, "0")
 
-        mainViewModel.getAllCampaigns(object : OnGetCampaign<List<Campaign>> {
+        mainViewModel.getSubsCampaigns(object : OnGetCampaign<List<Campaign>> {
             override fun onGetCampaign(status: Boolean, result: List<Campaign>) {
-                campaign = ArrayList()
-                if (status) {
-                    campaign = result
-                    binding.videoTitle.text = campaign?.get(0)?.video_title
-                    startVideo(campaign?.get(0)?.video_id.toString())
-                } else {
-                    Toast.makeText(context, "No video found", Toast.LENGTH_LONG).show()
+                try {
+                    campaign = ArrayList()
+                    if (status) {
+                        campaign = result
+                        binding.videoTitle.text = campaign?.get(0)?.video_title
+                        startVideo(campaign?.get(0)?.video_id.toString())
+                    } else if(context!=null){
+                        Toast.makeText(context, "No video found", Toast.LENGTH_LONG).show()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         })
@@ -111,16 +114,22 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
         binding.video.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
 
-                youTubePlayer.loadVideo(videoId, 0f)
-                player = youTubePlayer
+                if (videoId.isNotEmpty()) {
+                    val time = campaign?.get(currentNumber)?.total_time?.toLong()!! * 1000
+                    startTimer(time,false)
+                    youTubePlayer.loadVideo(videoId, 0f)
+                    player = youTubePlayer
+                }
 
                 binding.nextBtn.setOnClickListener {
                     if (currentNumber < campaign?.size!! - 1) {
                         currentNumber++
+                        val time = campaign?.get(currentNumber)?.total_time?.toLong()!! * 1000
+                        startTimer(time,false)
                         binding.videoTitle.text = campaign?.get(currentNumber)?.video_title
                         youTubePlayer.loadVideo(campaign?.get(currentNumber)?.video_id!!, 0f)
                         player = youTubePlayer
-                    } else {
+                    } else if(context!=null){
                         Toast.makeText(context, "No more video found", Toast.LENGTH_LONG).show()
                     }
                 }
@@ -192,7 +201,7 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_GOOGLE_PLAY_SERVICES -> if (resultCode != Activity.RESULT_OK) {
-                Toast.makeText(requireActivity(), "This app requires Google Play Services. Please " +
+                Toast.makeText(context, "This app requires Google Play Services. Please " +
                         "install Google Play Services on your device and relaunch this app.", Toast.LENGTH_SHORT).show()
             } else {
                 getResultsFromApi()
@@ -211,8 +220,8 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
                 val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
                 if (result!!.isSuccess) {
                     getResultsFromApi()
-                } else {
-                    Toast.makeText(requireActivity(), "Permission Required if granted then check internet connection", Toast.LENGTH_SHORT).show()
+                } else if(context!=null){
+                    Toast.makeText(context, "Permission Required if granted then check internet connection", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -224,12 +233,17 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
     }
 
     override fun onPermissionsDenied(requestCode: Int, perms: List<String?>?) {
-        Toast.makeText(requireContext(), "This app needs to access your Google account for YouTube channel subscription.", Toast.LENGTH_SHORT).show()
+        if (context != null) {
+            Toast.makeText(context, "This app needs to access your Google account for YouTube channel subscription.", Toast.LENGTH_SHORT).show()
+        }
     }
 
 
     override fun onPause() {
         super.onPause()
+        if(countDownTimer!=null){
+            countDownTimer?.cancel()
+        }
         if(player!=null) {
             player?.pause()
         }
@@ -237,7 +251,9 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
 
     override fun onSubscribetionSuccess(title: String?) {
         hidepDialog()
-        Toast.makeText(requireActivity(), "Successfully subscribe to $title", Toast.LENGTH_SHORT).show()
+        if(context!=null) {
+            Toast.makeText(context, "Successfully subscribe to $title", Toast.LENGTH_SHORT).show()
+        }
         updateUserCoins()
         updateCampaignStatus()
     }
@@ -246,12 +262,12 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
         val campaignId = campaign?.get(currentNumber)?.id.toString()
         val campaignNumber = (campaign?.get(currentNumber)?.current_number?.toInt()?.plus(1)).toString()
 
-        mainViewModel.updateCampaignStatus(campaignId,campaignNumber,object: OnCampaignStatus{
+        mainViewModel.updateCampaignStatus(campaignId, campaignNumber, object : OnCampaignStatus {
             override fun onCampaignStatus(status: Boolean) {
-                if(status){
-                    Log.i(TAG,"Campaign status increased")
-                }else{
-                    Log.i(TAG,"Campaign Status not increased")
+                if (status) {
+                    Log.i(TAG, "Campaign status increased")
+                } else {
+                    Log.i(TAG, "Campaign Status not increased")
                 }
             }
         })
@@ -261,63 +277,82 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
     private fun updateUserCoins(){
 
         val updatedCoins = (coins.toInt() + 130).toString()
-        mainViewModel.updateCoins(updatedCoins, object : LikeListener{
+        mainViewModel.updateCoins(updatedCoins, object : LikeListener {
             override fun onLikeStarted() {
-                Log.i(TAG,"Updating Coins")
+                Log.i(TAG, "Updating Coins")
             }
 
             override fun onLikedSuccess() {
-                Pref.putString(PrefKeys.coins,updatedCoins)
-                Log.i(TAG,"Coins are updated")
+                startTimer(10000,true)
+                Pref.putString(PrefKeys.coins, updatedCoins)
+                if(context!=null) {
+                    Toast.makeText(context, "Received $updatedCoins coins", Toast.LENGTH_LONG).show()
+                }
+                Log.i(TAG, "Coins are updated")
             }
 
             override fun onLikedFailed() {
 
-                Log.i(TAG,"Coins are not updated")
+                Log.i(TAG, "Coins are not updated")
             }
 
         })
     }
 
+    private fun startTimer(millis: Long, isSubscribed: Boolean) {
+
+        countDownTimer = object : CountDownTimer(millis, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                if(!isSubscribed) {
+                    binding.coins.text = "220"
+                    binding.subscribe.isEnabled = false
+                }else{
+                    binding.coins.visibility = View.GONE
+                }
+                binding.timer.text = "Seconds remaining: ${millisUntilFinished / 1000}"
+            }
+
+            override fun onFinish() {
+                if(!isSubscribed) {
+                    binding.subscribe.isEnabled = true
+                    if(context!=null) {
+                        Toast.makeText(context, "Now you can subscribe the channel", Toast.LENGTH_LONG).show()
+                    }
+                }else {
+
+                    if (currentNumber < campaign?.size!!-1) {
+                        currentNumber++
+                        startVideo(campaign?.get(currentNumber)?.video_id.toString())
+                    } else if(context!=null){
+                        Toast.makeText(context, "No more videos, but you can watch ads to earn coins", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+        countDownTimer?.start()
+    }
+
     override fun onSubscribetionFail() {
 
         hidepDialog()
+        Toast.makeText(context, "Already Subscribed",
+                Toast.LENGTH_LONG).show()
 
-        // user don't have youtube channel subscribe permission so grant it form him
-        // as we have not taken at the time of sign in
-        if (counter < 3) {
-            counter++ // attempt three times on failure
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestEmail()
-                    .requestScopes(Scope("https://www.googleapis.com/auth/youtube")) // require this scope for youtube channel subscribe
-                    .build()
-
-//            GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this)
-//                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-//                    .build();
-            val mGoogleApiClient = GoogleSignIn.getClient(requireActivity(), gso)
-            //            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-            val signInIntent = mGoogleApiClient.signInIntent
-            startActivityForResult(signInIntent, RC_SIGN_IN)
-        } else {
-            Toast.makeText(requireActivity(), "Already Subscribed",
-                    Toast.LENGTH_LONG).show()
-        }
     }
 
     private var pDialog: ProgressDialog? = null
 
-    fun initpDialog(context: Context?, msg: String?) {
+    private fun initpDialog(context: Context?, msg: String?) {
         pDialog = ProgressDialog(context)
         pDialog!!.setMessage(msg)
         pDialog!!.setCancelable(false)
     }
 
-    fun showpDialog() {
+    private fun showpDialog() {
         if (!pDialog!!.isShowing) pDialog!!.show()
     }
 
-    fun hidepDialog() {
+    private fun hidepDialog() {
         if (pDialog!!.isShowing) pDialog!!.dismiss()
     }
 

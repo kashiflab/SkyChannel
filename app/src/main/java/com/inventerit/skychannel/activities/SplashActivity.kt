@@ -19,7 +19,6 @@ import com.tramsun.libs.prefcompat.Pref
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var mAuth: FirebaseAuth
-    private lateinit var rx: RxPermissions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +29,8 @@ class SplashActivity : AppCompatActivity() {
         setFullScreen()
 
         mAuth = FirebaseAuth.getInstance()
-        rx = RxPermissions(this)
-        askPermission()
 
+        goToNextActivity()
     }
 
     private fun goToNextActivity(){
@@ -53,18 +51,6 @@ class SplashActivity : AppCompatActivity() {
             }
 
         }, 3000)
-    }
-
-
-    private fun askPermission(){
-        rx.request(android.Manifest.permission.GET_ACCOUNTS, android.Manifest.permission.INTERNET)
-                .subscribe{granted ->
-                    if (granted) {
-                        goToNextActivity()
-                    } else {
-                        askPermission()
-                    }
-                }
     }
 
 
