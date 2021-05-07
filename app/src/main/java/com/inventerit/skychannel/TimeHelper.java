@@ -16,6 +16,10 @@ public class TimeHelper {
 
     private static final String TAG = "TimeHelper";
 
+    public static String getDate(){
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault()).format(new Date());
+    }
+
     @Nullable
     public static long getDateTime(int seconds) {
         Date date = new Date();

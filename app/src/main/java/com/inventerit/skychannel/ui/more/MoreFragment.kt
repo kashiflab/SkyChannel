@@ -26,14 +26,14 @@ class MoreFragment : Fragment() {
     private lateinit var mainViewModel: MainViewModel
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
 
         binding = FragmentMoreBinding.inflate(layoutInflater)
 
-        if (Pref.getBoolean(PrefKeys.isDarkMode,false)) {
+        if (Pref.getBoolean(PrefKeys.isDarkMode, false)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
 
@@ -43,6 +43,15 @@ class MoreFragment : Fragment() {
         setDarkMode()
 
         mAtuh = FirebaseAuth.getInstance()
+
+        binding.share.setOnClickListener {
+            val sharingIntent = Intent(Intent.ACTION_SEND)
+            sharingIntent.type = "text/plain"
+            val shareBody = "Checkout this new amazing app from which you can get authentic YT subscribers, likes and views. Try this app to boost your YT Channel."
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "SkyChannel")
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody)
+            startActivity(Intent.createChooser(sharingIntent, "Share via"))
+        }
 
         return binding.root
     }

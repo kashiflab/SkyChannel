@@ -141,6 +141,7 @@
             android:text="Feedback"
             app:drawableStartCompat="@drawable/ic_feedback" />
         <TextView
+            android:id="@+id/share"
             android:gravity="start|center"
             app:drawableEndCompat="@drawable/ic_baseline_arrow_forward_ios_24"
             android:layout_marginTop="20dp"

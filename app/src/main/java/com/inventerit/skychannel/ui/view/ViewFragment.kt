@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.inventerit.skychannel.TimeHelper
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.databinding.FragmentViewBinding
@@ -16,6 +17,8 @@ import com.inventerit.skychannel.interfaces.LikeListener
 import com.inventerit.skychannel.interfaces.OnCampaignStatus
 import com.inventerit.skychannel.interfaces.OnGetCampaign
 import com.inventerit.skychannel.model.Campaign
+import com.inventerit.skychannel.room.Videos
+import com.inventerit.skychannel.room.VideosDatabase
 import com.inventerit.skychannel.viewModel.MainViewModel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -36,6 +39,12 @@ class ViewFragment : Fragment() {
     private var coinsAdded = false
     private var campaignUpdated = false
 
+    private lateinit var videosDatabase: VideosDatabase
+
+    private var mUser = FirebaseAuth.getInstance().currentUser
+
+    private var viewed: List<Videos>? = null
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -44,12 +53,28 @@ class ViewFragment : Fragment() {
         binding = FragmentViewBinding.inflate(layoutInflater)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
+        videosDatabase = VideosDatabase.getInstance(context)
+        Thread {
+            viewed = videosDatabase.videosDao().getAllViews("2")
+        }
         mainViewModel.getViewsCampaigns(object: OnGetCampaign<List<Campaign>>{
             override fun onGetCampaign(status: Boolean, result: List<Campaign>) {
                 try {
+                    val list: MutableList<Campaign> = ArrayList()
                     campaign = ArrayList()
                     if (status) {
-                        campaign = result
+                        campaign = if(viewed?.size!!>0){
+                            for(views in viewed!!){
+                                for(camp in campaign!!) {
+                                    if (!views.videoId.equals(camp.video_id.toString())) {
+                                        list.add(camp)
+                                    }
+                                }
+                            }
+                            list
+                        }else {
+                            result
+                        }
                         binding.videoTitle.text = campaign?.get(0)?.video_title.toString()
                         binding.duration.text = campaign?.get(0)?.total_time.toString()
                         startVideo(campaign?.get(0)?.video_id.toString())
@@ -97,18 +122,32 @@ class ViewFragment : Fragment() {
                 if (updateNumber >= 0) {
                     binding.duration.text = updateNumber.toString()
                     if(updateNumber==1) {
-                        if(!coinsAdded) {
-                            coinsAdded = true
-                            updateUserCoin()
-                        }
-                        if(!campaignUpdated) {
-                            campaignUpdated = true
-                            updateCampaignStatus()
-                        }
+                        addView()
                     }
                 }
             }
         })
+    }
+
+    private fun addView(){
+        if (!coinsAdded) {
+            val videos = Videos()
+            videos.videoId = campaign?.get(currentNumber)?.video_id.toString()
+            videos.created_at = TimeHelper.getDate()
+            videos.type = "2"
+            videos.userId = mUser.uid
+            videos.channelId = campaign?.get(currentNumber)?.channel_id.toString()
+
+            Thread {
+                videosDatabase.videosDao().insert(videos)
+            }
+            coinsAdded = true
+            updateUserCoin()
+        }
+        if (!campaignUpdated) {
+            campaignUpdated = true
+            updateCampaignStatus()
+        }
     }
     private fun updateCampaignStatus() {
         val campaignId = campaign?.get(currentNumber)?.id.toString()

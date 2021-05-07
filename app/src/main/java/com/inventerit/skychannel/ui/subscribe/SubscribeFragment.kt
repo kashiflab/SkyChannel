@@ -8,6 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,14 +18,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.common.api.Scope
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.youtube.YouTubeScopes
+import com.google.firebase.auth.FirebaseAuth
+import com.inventerit.skychannel.TimeHelper
 import com.inventerit.skychannel.YouTubeActivityPresenter
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.databinding.FragmentSubscribeBinding
@@ -32,6 +33,8 @@ import com.inventerit.skychannel.interfaces.OnCampaignStatus
 import com.inventerit.skychannel.interfaces.OnGetCampaign
 import com.inventerit.skychannel.interfaces.YouTubeActivityView
 import com.inventerit.skychannel.model.Campaign
+import com.inventerit.skychannel.room.Videos
+import com.inventerit.skychannel.room.VideosDatabase
 import com.inventerit.skychannel.viewModel.MainViewModel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -47,12 +50,15 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
     private val TAG: String = "SubscribeFragment"
     private var player: YouTubePlayer? = null
 
+    private lateinit var videosDatabase: VideosDatabase
+
     private var counter = 0
 
     private lateinit var mainViewModel: MainViewModel
     private var currentNumber = 0
 
     private var campaign: List<Campaign>? = null
+    private lateinit var videos: List<Videos>
 
     private var mCredential: GoogleAccountCredential? = null
     private var presenter: YouTubeActivityPresenter? = null
@@ -65,6 +71,8 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
     val REQUEST_GOOGLE_PLAY_SERVICES = 1002
     val REQUEST_PERMISSION_GET_ACCOUNTS = 1003
     private val RC_SIGN_IN = 12311
+
+    private var mUser = FirebaseAuth.getInstance().currentUser
 
     private var coins: String = ""
 
@@ -82,7 +90,13 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
                 requireActivity(), listOf(YouTubeScopes.YOUTUBE))
                 .setBackOff(ExponentialBackOff())
 
+        videosDatabase = VideosDatabase.getInstance(context)
         coins = Pref.getString(PrefKeys.coins, "0")
+
+        Thread {
+            videos = videosDatabase.videosDao().getAllSubscriptions("0")
+            Log.i(TAG,videos.size.toString())
+        }.start()
 
         mainViewModel.getSubsCampaigns(object : OnGetCampaign<List<Campaign>> {
             override fun onGetCampaign(status: Boolean, result: List<Campaign>) {
@@ -92,7 +106,7 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
                         campaign = result
                         binding.videoTitle.text = campaign?.get(0)?.video_title
                         startVideo(campaign?.get(0)?.video_id.toString())
-                    } else if(context!=null){
+                    } else if (context != null) {
                         Toast.makeText(context, "No video found", Toast.LENGTH_LONG).show()
                     }
                 } catch (e: Exception) {
@@ -109,29 +123,61 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
         return binding.root
     }
 
+    private var isAlreadySubscribed: Boolean = false
+    fun checkAlreadySubscribed(){
+        if(videos.isNotEmpty()) {
+            for (video in videos) {
+                if (campaign?.get(currentNumber)?.video_id == video.videoId) {
+                    isAlreadySubscribed = true
+                }
+            }
+        }
+    }
+
     fun startVideo(videoId: String){
         lifecycle.addObserver(binding.video)
         binding.video.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
+                checkAlreadySubscribed()
+                Handler(Looper.myLooper()!!).postDelayed(Runnable {
+                    if (videoId.isNotEmpty()) {
+                        if(isAlreadySubscribed){
+                            binding.subscribe.isEnabled = false
+                            binding.subscribe.text = "Subscribed"
+                        }else {
+                            binding.subscribe.isEnabled = false
+                            binding.subscribe.text = "Subscribe"
+                        }
+                        val time = campaign?.get(currentNumber)?.total_time?.toLong()!! * 1000
+                        startTimer(time, false)
+                        youTubePlayer.loadVideo(videoId, 0f)
+                        player = youTubePlayer
+                    }
+                },500)
 
-                if (videoId.isNotEmpty()) {
-                    val time = campaign?.get(currentNumber)?.total_time?.toLong()!! * 1000
-                    startTimer(time,false)
-                    youTubePlayer.loadVideo(videoId, 0f)
-                    player = youTubePlayer
-                }
 
                 binding.nextBtn.setOnClickListener {
-                    if (currentNumber < campaign?.size!! - 1) {
-                        currentNumber++
-                        val time = campaign?.get(currentNumber)?.total_time?.toLong()!! * 1000
-                        startTimer(time,false)
-                        binding.videoTitle.text = campaign?.get(currentNumber)?.video_title
-                        youTubePlayer.loadVideo(campaign?.get(currentNumber)?.video_id!!, 0f)
-                        player = youTubePlayer
-                    } else if(context!=null){
-                        Toast.makeText(context, "No more video found", Toast.LENGTH_LONG).show()
-                    }
+                    checkAlreadySubscribed()
+                    Handler(Looper.myLooper()!!).postDelayed({
+                        if (currentNumber < campaign?.size!! - 1) {
+                            if(isAlreadySubscribed){
+                                binding.subscribe.isEnabled = false
+                                binding.subscribe.text = "Subscribed"
+                            }else {
+                                binding.subscribe.isEnabled = false
+                                binding.subscribe.text = "Subscribe"
+                            }
+                            currentNumber++
+                            val time = campaign?.get(currentNumber)?.total_time?.toLong()!! * 1000
+                            startTimer(time, false)
+                            binding.videoTitle.text = campaign?.get(currentNumber)?.video_title
+                            youTubePlayer.loadVideo(campaign?.get(currentNumber)?.video_id!!, 0f)
+                            player = youTubePlayer
+                        } else if (context != null) {
+                            Toast.makeText(context, "No more video found", Toast.LENGTH_LONG).show()
+                        }
+                    },500)
+
                 }
 
             }
@@ -220,7 +266,7 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
                 val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
                 if (result!!.isSuccess) {
                     getResultsFromApi()
-                } else if(context!=null){
+                } else if (context != null) {
                     Toast.makeText(context, "Permission Required if granted then check internet connection", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -254,8 +300,25 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
         if(context!=null) {
             Toast.makeText(context, "Successfully subscribe to $title", Toast.LENGTH_SHORT).show()
         }
+        val videos = Videos()
+        videos.videoId = campaign?.get(currentNumber)?.video_id.toString()
+        videos.created_at = TimeHelper.getDate()
+        videos.type = "0"
+        videos.userId = mUser.uid
+        videos.channelId = campaign?.get(currentNumber)?.channel_id.toString()
+
+        saveIntoDB(videos)
+
+        binding.subscribe.text = "Subscribed"
         updateUserCoins()
         updateCampaignStatus()
+    }
+
+    private fun saveIntoDB(video: Videos){
+        Thread {
+            videosDatabase.videosDao().insert(video)
+            Log.i(TAG,"${video.videoId}, ${campaign?.get(currentNumber)?.video_id}")
+        }.start()
     }
 
     private fun updateCampaignStatus() {
@@ -283,9 +346,9 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
             }
 
             override fun onLikedSuccess() {
-                startTimer(10000,true)
+                startTimer(10000, true)
                 Pref.putString(PrefKeys.coins, updatedCoins)
-                if(context!=null) {
+                if (context != null) {
                     Toast.makeText(context, "Received $updatedCoins coins", Toast.LENGTH_LONG).show()
                 }
                 Log.i(TAG, "Coins are updated")
@@ -304,22 +367,23 @@ class SubscribeFragment : Fragment(), PermissionCallbacks, YouTubeActivityView {
         countDownTimer = object : CountDownTimer(millis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 if(!isSubscribed) {
+                    binding.coins.visibility = View.VISIBLE
                     binding.coins.text = "220"
                     binding.subscribe.isEnabled = false
                 }else{
+                    binding.nextBtn.isEnabled = false
+                    binding.subscribe.isEnabled = false
                     binding.coins.visibility = View.GONE
                 }
                 binding.timer.text = "Seconds remaining: ${millisUntilFinished / 1000}"
             }
 
             override fun onFinish() {
-                if(!isSubscribed) {
+                if(!isSubscribed && !isAlreadySubscribed) {
                     binding.subscribe.isEnabled = true
-                    if(context!=null) {
-                        Toast.makeText(context, "Now you can subscribe the channel", Toast.LENGTH_LONG).show()
-                    }
-                }else {
 
+                }else {
+                    binding.nextBtn.isEnabled = true
                     if (currentNumber < campaign?.size!!-1) {
                         currentNumber++
                         startVideo(campaign?.get(currentNumber)?.video_id.toString())

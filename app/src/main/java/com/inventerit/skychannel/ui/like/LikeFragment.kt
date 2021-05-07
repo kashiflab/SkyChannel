@@ -6,6 +6,8 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +26,9 @@ import com.google.android.gms.common.api.Scope
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.youtube.YouTubeScopes
+import com.google.firebase.auth.FirebaseAuth
 import com.inventerit.skychannel.R
+import com.inventerit.skychannel.TimeHelper
 import com.inventerit.skychannel.Utils
 import com.inventerit.skychannel.Utils.hidepDialog
 import com.inventerit.skychannel.YouTubeActivityPresenter
@@ -35,6 +39,8 @@ import com.inventerit.skychannel.interfaces.OnCampaignStatus
 import com.inventerit.skychannel.interfaces.OnGetCampaign
 import com.inventerit.skychannel.interfaces.YouTubeActivityView
 import com.inventerit.skychannel.model.Campaign
+import com.inventerit.skychannel.room.Videos
+import com.inventerit.skychannel.room.VideosDatabase
 import com.inventerit.skychannel.viewModel.MainViewModel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -50,12 +56,14 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
     private var currentNumber = 0
 
     private var campaign: List<Campaign>? = null
-    private var counter = 0
 
     private lateinit var mainViewModel: MainViewModel
 
+    private var mUser = FirebaseAuth.getInstance().currentUser
     private var mCredential: GoogleAccountCredential? = null
     private var presenter: YouTubeActivityPresenter? = null
+
+    private lateinit var videosDatabase: VideosDatabase
 
     val REQUEST_ACCOUNT_PICKER = 1000
     val REQUEST_AUTHORIZATION = 1001
@@ -67,6 +75,8 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
 
     private var countDownTimer: CountDownTimer? = null
     private var coins = ""
+
+    private var likedVideos: List<Videos>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,6 +95,12 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
             requireActivity(), listOf(YouTubeScopes.YOUTUBE))
             .setBackOff(ExponentialBackOff())
 
+        videosDatabase = VideosDatabase.getInstance(context)
+
+        Thread {
+            likedVideos = videosDatabase.videosDao().getAllLikes("1")
+            Log.i(TAG,likedVideos?.size.toString())
+        }.start()
         mainViewModel.getLikesCampaigns(object : OnGetCampaign<List<Campaign>>{
             override fun onGetCampaign(status: Boolean, result: List<Campaign>) {
                 campaign = ArrayList()
@@ -104,11 +120,27 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
 
 
         binding.like.setOnClickListener {
-            getResultsFromApi()
+            if(!isAlreadyLiked) {
+                getResultsFromApi()
+            }else if(context!=null){
+                Toast.makeText(context,"Already Liked",Toast.LENGTH_LONG).show()
+            }
         }
 
         return binding.root
     }
+
+    private var isAlreadyLiked: Boolean = false
+    fun checkAlreadyLiked(){
+        if (likedVideos?.size!! > 0) {
+            for (liked in likedVideos!!) {
+                if (liked.videoId.equals(campaign?.get(currentNumber)?.video_id.toString())) {
+                    isAlreadyLiked = true
+                }
+            }
+        }
+    }
+
 
     private fun startVideo(videoId: String) {
         lifecycle.addObserver(binding.video)
@@ -116,24 +148,52 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
         binding.video.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
 
-                if(videoId.isNotEmpty()) {
-                    val time = campaign?.get(currentNumber)?.total_time?.toLong()!! * 1000
-                    startTimer(time,false)
-                    youTubePlayer.loadVideo(videoId, 0f)
-                    player = youTubePlayer
-                }
-
-                binding.nextBtn.setOnClickListener {
-                    if (currentNumber < campaign?.size!! - 1) {
-                        currentNumber++
+                checkAlreadyLiked()
+                Handler(Looper.myLooper()!!).postDelayed({
+                    if(videoId.isNotEmpty()) {
+                        if(isAlreadyLiked){
+                            binding.like.text = "Liked"
+                            binding.like.isEnabled = false
+                        }else{
+                            binding.like.text = "Like"
+                            binding.like.isEnabled = false
+                        }
                         val time = campaign?.get(currentNumber)?.total_time?.toLong()!! * 1000
                         startTimer(time,false)
-                        binding.videoTitle.text = campaign?.get(currentNumber)?.video_title
-                        youTubePlayer.loadVideo(campaign?.get(currentNumber)?.video_id!!, 0f)
+                        youTubePlayer.loadVideo(videoId, 0f)
                         player = youTubePlayer
-                    } else if(context!=null){
-                        Toast.makeText(context, "No more video found", Toast.LENGTH_LONG).show()
                     }
+                },500)
+
+                binding.nextBtn.setOnClickListener {
+                    checkAlreadyLiked()
+                    Handler(Looper.myLooper()!!).postDelayed({
+                        if (currentNumber < campaign?.size!! - 1) {
+                            if(isAlreadyLiked){
+                                binding.like.text = "Liked"
+                                binding.like.isEnabled = false
+                            }else{
+                                binding.like.text = "Like"
+                                binding.like.isEnabled = false
+                            }
+                            if(likedVideos?.size!! > 0){
+                                for(liked in likedVideos!!){
+                                    if(liked.videoId.equals(campaign?.get(currentNumber)?.video_id.toString())){
+                                        binding.like.text = "Liked"
+                                        binding.like.isEnabled = false
+                                    }
+                                }
+                            }
+                            currentNumber++
+                            val time = campaign?.get(currentNumber)?.total_time?.toLong()!! * 1000
+                            startTimer(time,false)
+                            binding.videoTitle.text = campaign?.get(currentNumber)?.video_title
+                            youTubePlayer.loadVideo(campaign?.get(currentNumber)?.video_id!!, 0f)
+                            player = youTubePlayer
+                        } else if(context!=null){
+                            Toast.makeText(context, "No more video found", Toast.LENGTH_LONG).show()
+                        }
+                    },500)
                 }
 
             }
@@ -158,6 +218,8 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
                     binding.coins.text = "220"
                     binding.like.isEnabled = false
                 }else{
+                    binding.nextBtn.isEnabled = false
+                    binding.like.isEnabled = false
                     binding.coins.visibility = View.GONE
                 }
                 binding.timer.text = "Seconds remaining: ${millisUntilFinished / 1000}"
@@ -170,9 +232,10 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
                         Toast.makeText(context, "Now you can subscribe the channel", Toast.LENGTH_LONG).show()
                     }
                 }else {
-
+                    binding.nextBtn.isEnabled = true
                     if (currentNumber < campaign?.size!!-1) {
                         currentNumber++
+                        binding.like.isEnabled = true
                         startVideo(campaign?.get(currentNumber)?.video_id.toString())
                     } else if(context!=null){
                         Toast.makeText(context, "No more videos, but you can watch ads to earn coins", Toast.LENGTH_LONG).show()
@@ -271,12 +334,31 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
         }
     }
 
+
     override fun onSubscribetionSuccess(title: String?) {
         hidepDialog()
-        Toast.makeText(requireActivity(), "Successfully liked to $title", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireActivity(), "Successfully liked", Toast.LENGTH_SHORT).show()
+
+        val videos = Videos()
+        videos.videoId = campaign?.get(currentNumber)?.video_id.toString()
+        videos.created_at = TimeHelper.getDate()
+        videos.type = "1"
+        videos.userId = mUser.uid
+        videos.channelId = campaign?.get(currentNumber)?.channel_id.toString()
+
+        saveIntoDB(videos)
         updateCampaignStatus()
         updateUserCoins()
     }
+
+    private lateinit var insertThread: Thread
+    private fun saveIntoDB(video: Videos) {
+        insertThread = Thread {
+            videosDatabase.videosDao().insert(video)
+        }
+        insertThread.start()
+    }
+
 
     private fun updateUserCoins(){
         val updatedCoins = (coins.toInt() + 50).toString()
@@ -318,7 +400,6 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
 
     override fun onSubscribetionFail() {
         hidepDialog()
-
             Toast.makeText(requireActivity(), "Already Liked",
                 Toast.LENGTH_LONG).show()
 
