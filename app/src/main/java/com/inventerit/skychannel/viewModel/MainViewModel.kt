@@ -2,7 +2,7 @@ package com.inventerit.skychannel.viewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import com.inventerit.skychannel.MainRepository
+import com.inventerit.skychannel.repo.MainRepository
 import com.inventerit.skychannel.interfaces.*
 import com.inventerit.skychannel.model.Api
 import com.inventerit.skychannel.model.Campaign
@@ -12,12 +12,8 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     private var myRepo: MainRepository = MainRepository.getRepo()
 
-    fun getData(onCompleteListener: OnComplete<User>) {
-        myRepo.getUserData(onCompleteListener)
-    }
-
-    fun saveCampaign(campaign: Campaign, onCampaignAdded: OnCampaignAdded){
-        myRepo.saveCampaign(campaign,onCampaignAdded)
+    fun saveCampaign(campaign: Campaign, previousCoins: String, onCampaignAdded: OnCampaignAdded){
+        myRepo.saveCampaign(campaign,previousCoins, onCampaignAdded)
     }
 
     fun getSubsCampaigns(onGetCampaign: OnGetCampaign<List<Campaign>>){
@@ -40,6 +36,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
         myRepo.getAllCampaigns(onGetCampaign)
     }
 
+    fun addUser(campaignId: String, uid: String){
+        myRepo.addUser(campaignId,uid)
+    }
+
     fun getUserCampaigns(onGetCampaign: OnGetCampaign<List<Campaign>>){
         myRepo.getUserCampaigns(onGetCampaign)
     }
@@ -55,4 +55,9 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     fun updateCampaignStatus(campaignId: String, campaignNumber: String, onCampaignStatus: OnCampaignStatus){
         myRepo.updateCampaignStatus(campaignId,campaignNumber,onCampaignStatus)
     }
+
+    fun getCampaignUsers(campaignId: String,onGetUsers: OnGetUsers){
+        myRepo.getCampaignUsers(onGetUsers,campaignId)
+    }
+
 }

@@ -14,13 +14,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.button.MaterialButton
+import com.google.android.youtube.player.internal.p
 import com.inventerit.skychannel.Adapter.CampaignAdapter
 import com.inventerit.skychannel.R
-import com.inventerit.skychannel.interfaces.OnGetCampaign
 import com.inventerit.skychannel.activities.AddCampaignActivity
 import com.inventerit.skychannel.databinding.FragmentCampaignBinding
+import com.inventerit.skychannel.interfaces.OnGetCampaign
 import com.inventerit.skychannel.model.Campaign
 import com.inventerit.skychannel.viewModel.MainViewModel
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 
 class CampaignFragment : Fragment() {
 
@@ -109,12 +113,20 @@ class CampaignFragment : Fragment() {
 
         addBtn.setOnClickListener{
             val link = etLink.text.toString()
+            var pattern: Pattern = Pattern.compile("^(?:https?:)?(?:\\/\\/)?(?:youtu\\.be\\/|(?:www\\.|m\\.)?youtube\\.com\\/(?:watch|v|embed)(?:\\.php)?(?:\\?.*v=|\\/))([a-zA-Z0-9\\_-]{7,15})(?:[\\?&][a-zA-Z0-9\\_-]+=[a-zA-Z0-9\\_-]+)*(?:[&\\/\\#].*)?\$")
+            val m: Matcher = pattern.matcher(link)
+
             if(link.isNotEmpty()) {
-                startActivity(
-                    Intent(context, AddCampaignActivity::class.java)
-                        .putExtra("link", link).putExtra("type", type)
-                )
-                dialoge?.hide()
+                if(m.matches()){
+                    startActivity(
+                        Intent(context, AddCampaignActivity::class.java)
+                            .putExtra("link", link).putExtra("type", type)
+                    )
+                    dialoge?.hide()
+                }else{
+                    Toast.makeText(context,"Please enter a valid link", Toast.LENGTH_LONG).show()
+                }
+
             }else{
                 Toast.makeText(context,"Video link is required",Toast.LENGTH_LONG).show()
             }

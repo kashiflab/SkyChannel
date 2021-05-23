@@ -115,6 +115,8 @@ dependencies {
     implementation('com.google.apis:google-api-services-youtube:v3-rev186-1.23.0') {
         exclude group: 'org.apache.httpcomponents'
     }
+    implementation 'com.anjlab.android.iab.v3:library:1.0.44'
+    implementation"com.android.billingclient:billing:4.0.0"
 
 }
 apply plugin: 'com.google.gms.google-services'

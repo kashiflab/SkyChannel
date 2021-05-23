@@ -13,5 +13,7 @@
     <color name="contentTextColor">#020000</color>
     <color name="imageBorderColor">#D50000</color>
     <color name="miniTitle">#2A2E43</color>
-    <color name="cardBgColor">#f4f4f4</color>
+    <color name="cardBgColor">#f6f6f6</color>
+    <color name="gray">#CACACA</color>
+    <color name="light_red">#FF3030</color>
 </resources>

@@ -1,4 +1,4 @@
-package com.inventerit.skychannel.room;
+package com.inventerit.skychannel.room.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

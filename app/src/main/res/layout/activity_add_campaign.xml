@@ -50,6 +50,7 @@
                 app:layout_constraintStart_toStartOf="@id/imageView"
                 app:layout_constraintTop_toBottomOf="@id/imageView" />
 
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
@@ -76,9 +77,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:hint="Enter here"
-        app:helperText="(min:10, max: 5000)"
+        app:helperText="(min:10, max: 1000)"
         app:layout_constraintEnd_toEndOf="@+id/tv"
         app:layout_constraintStart_toStartOf="@+id/tv"
         app:layout_constraintTop_toBottomOf="@+id/tv">
@@ -90,9 +91,21 @@
             android:inputType="number"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
+<!--    <androidx.appcompat.widget.AppCompatSpinner-->
+<!--        android:id="@+id/preSpinner"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_weight="0.5"-->
+<!--        android:background="@drawable/spinner_bg"-->
+<!--        android:entries="@array/pre_array"-->
+<!--        android:prompt="@string/pre_prompt"-->
+<!--        android:spinnerMode="dropdown"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/tv"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/tv"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv" />-->
 
     <TextView
-        android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:id="@+id/tv2"
@@ -112,9 +125,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:hint="Enter here"
-        app:helperText="(min:10, max: 5000)"
+        app:helperText="(min:10, max: 600)"
         app:layout_constraintEnd_toEndOf="@+id/tv2"
         app:layout_constraintStart_toStartOf="@+id/tv2"
         app:layout_constraintTop_toBottomOf="@+id/tv2">
@@ -126,6 +139,29 @@
             android:inputType="number"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:id="@+id/coinstv"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="Total:"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/timeInput"
+        app:layout_constraintTop_toBottomOf="@+id/timeInput" />
+
+    <TextView
+        android:id="@+id/coins"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="0 Coins"
+        android:textColor="@color/red_500"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/coinstv"
+        app:layout_constraintTop_toBottomOf="@+id/timeInput" />
 
     <TextView
         android:id="@+id/note"
@@ -137,10 +173,9 @@
         android:text="*Note"
         android:textColor="@color/red_500"
         android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@id/note1"
         app:layout_constraintEnd_toEndOf="@+id/timeInput"
         app:layout_constraintStart_toStartOf="@+id/timeInput"
-        app:layout_constraintTop_toBottomOf="@+id/timeInput" />
+        app:layout_constraintTop_toBottomOf="@+id/coinstv" />
 
     <TextView
         android:layout_marginTop="10dp"

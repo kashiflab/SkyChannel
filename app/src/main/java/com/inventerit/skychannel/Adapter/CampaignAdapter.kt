@@ -1,26 +1,32 @@
 package com.inventerit.skychannel.Adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.inventerit.skychannel.R
+import com.inventerit.skychannel.activities.CampaignDetailActivity
 import com.inventerit.skychannel.model.Campaign
 
 class CampaignAdapter(val context: Context,
                       var mList: List<Campaign>
 ): RecyclerView.Adapter<CampaignAdapter.ViewHolder>() {
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var cp_Image = itemView.findViewById<ImageView>(R.id.cp_image)
         var cp_title = itemView.findViewById<TextView>(R.id.videoTitle)
         var cp_time = itemView.findViewById<TextView>(R.id.time)
         var cp_progress = itemView.findViewById<ProgressBar>(R.id.progress)
         var cp_views = itemView.findViewById<TextView>(R.id.views)
+        var view = itemView.findViewById<View>(R.id.view2)
         val parent: View = itemView
         init {
             parent.tag = this
@@ -38,12 +44,22 @@ class CampaignAdapter(val context: Context,
         val imageUrl = "https://img.youtube.com/vi/"+campaign.video_id+"/0.jpg"
         var view = ""
 
-        if(campaign.type == "0"){
-            view = "Subscriber(s)"
-        }else if (campaign.type=="1"){
-            view = "Like(s)"
-        }else if (campaign.type=="2"){
-            view = "View(s)"
+        when (campaign.type) {
+            "0" -> {
+                view = "Subscriber(s)"
+            }
+            "1" -> {
+                view = "Like(s)"
+            }
+            "2" -> {
+                view = "View(s)"
+            }
+        }
+
+        if(campaign.isPaused=="1"){
+            holder.view.setBackgroundColor(ContextCompat.getColor(context,R.color.light_red))
+        }else{
+            holder.view.setBackgroundColor(ContextCompat.getColor(context,R.color.black))
         }
 
         Glide.with(context).load(imageUrl).into(holder.cp_Image)
@@ -52,6 +68,11 @@ class CampaignAdapter(val context: Context,
         holder.cp_views.text = "${campaign.current_number}/${campaign.total_number} $view"
         holder.cp_progress.max = campaign.total_number.toInt()
         holder.cp_progress.progress = campaign.current_number.toInt()
+
+        holder.itemView.setOnClickListener {
+            context.startActivity(Intent(context,CampaignDetailActivity::class.java)
+                .putExtra("campaign",campaign))
+        }
 
     }
 

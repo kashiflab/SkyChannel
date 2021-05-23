@@ -35,7 +35,7 @@
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kapil Mohan"
+            android:text="Username"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/contentTextColor"
@@ -96,6 +96,7 @@
             android:layout_height="wrap_content"
             android:text="Subscription"/>
         <TextView
+            android:id="@+id/buyCoins"
             android:gravity="start|center"
             android:layout_marginTop="20dp"
             android:textColor="@color/contentTextColor"
@@ -108,6 +109,7 @@
             app:drawableStartCompat="@drawable/ic_buy"
             app:drawableEndCompat="@drawable/ic_baseline_arrow_forward_ios_24" />
         <TextView
+            android:id="@+id/vip"
             android:gravity="start|center"
             app:drawableEndCompat="@drawable/ic_baseline_arrow_forward_ios_24"
             android:layout_marginTop="20dp"
@@ -119,6 +121,21 @@
             android:layout_height="wrap_content"
             android:text="VIP Membership"
             app:drawableStartCompat="@drawable/ic_vip" />
+
+        <TextView
+            android:id="@+id/subscriptions"
+            android:gravity="start|center"
+            app:drawableEndCompat="@drawable/ic_baseline_arrow_forward_ios_24"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/contentTextColor"
+            android:textStyle="bold"
+            android:padding="5dp"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Subscriptions"
+            app:drawableStartCompat="@drawable/ic_subscribe" />
+
         <TextView
             android:gravity="start|center"
             android:layout_marginTop="20dp"

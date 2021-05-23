@@ -8,5 +8,6 @@ data class Snippet(
     val description: String,
     val liveBroadcastContent: String,
     val publishedAt: String,
-    val title: String
+    val title: String,
+    val thumbnail: Thumbnail
 )

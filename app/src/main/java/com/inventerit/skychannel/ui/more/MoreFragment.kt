@@ -11,7 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
+import com.inventerit.skychannel.activities.BuyPointsActivity
 import com.inventerit.skychannel.activities.LoginActivity
+import com.inventerit.skychannel.activities.SubscriptionActivity
+import com.inventerit.skychannel.activities.VIPMembershipActivity
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.databinding.FragmentMoreBinding
 import com.inventerit.skychannel.viewModel.MainViewModel
@@ -51,6 +54,18 @@ class MoreFragment : Fragment() {
             sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "SkyChannel")
             sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody)
             startActivity(Intent.createChooser(sharingIntent, "Share via"))
+        }
+
+        binding.buyCoins.setOnClickListener {
+            startActivity(Intent(context,BuyPointsActivity::class.java))
+        }
+
+        binding.vip.setOnClickListener {
+            startActivity(Intent(context,VIPMembershipActivity::class.java))
+        }
+
+        binding.subscriptions.setOnClickListener {
+            startActivity(Intent(context,SubscriptionActivity::class.java))
         }
 
         return binding.root

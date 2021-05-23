@@ -1,8 +1,9 @@
 package com.inventerit.skychannel.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class Campaign {
+class Campaign: Serializable {
     var id: String = ""
     var user_id: String = ""
     var created_at: String = ""
@@ -15,4 +16,8 @@ class Campaign {
     var total_coins: String = ""
     var status: String = "" //0 for uncompleted 1 for completed 2 for terminated
     var type: String = "" //0 for subscribe 1 for like 2 for views 3 for comments
+    var isPaused: String = "" //0 for resumed 1 for paused
+    var coins: String = ""
+    var channelTitle: String = ""
+    var channelImage: String = ""
 }

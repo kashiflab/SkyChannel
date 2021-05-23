@@ -6,6 +6,9 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.inventerit.skychannel.room.dao.VideosDao;
+import com.inventerit.skychannel.room.model.Videos;
+
 
 //Room database to define version and db name
 @Database(entities = {Videos.class}, version = 1)

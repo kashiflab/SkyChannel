@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 abstract public class Constants {
     public static String users = "users";
     public static String campaigns = "campaigns";
+    public static String history = "history";
+    public static String credits = "credits";
 
     public static int SUBSCRIBE_TYPE = 0;
     public static int LIKE_TYPE = 1;
@@ -29,6 +31,14 @@ abstract public class Constants {
     public static String status = "status";
     public static String type = "type";
     public static String channel_id = "channel_id";
+    public static String is_paused = "is_paused";
+    public static String price = "price";
+    public static String title = "title";
+    public static String desc = "desc";
+    public static String sku = "sku";
+    public static String channel_title = "channel_title";
+    public static String channel_image = "channel_image";
+
 
     public static String DATA_API_KEY = "AIzaSyDUqZdrWnKoGlKVF3cMllPqybWi2TO9NIg";
 }

@@ -23,5 +23,12 @@
 
     <style name="Theme.SkyChannel.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="TabTheme">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
 
 </resources>

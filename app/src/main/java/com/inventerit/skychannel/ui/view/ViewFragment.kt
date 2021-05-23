@@ -1,7 +1,6 @@
 package com.inventerit.skychannel.ui.view
 
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,21 +9,26 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.inventerit.skychannel.TimeHelper
+import com.inventerit.skychannel.constant.Constants
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.databinding.FragmentViewBinding
 import com.inventerit.skychannel.interfaces.LikeListener
 import com.inventerit.skychannel.interfaces.OnCampaignStatus
 import com.inventerit.skychannel.interfaces.OnGetCampaign
 import com.inventerit.skychannel.model.Campaign
-import com.inventerit.skychannel.room.Videos
+import com.inventerit.skychannel.room.model.Videos
 import com.inventerit.skychannel.room.VideosDatabase
 import com.inventerit.skychannel.viewModel.MainViewModel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.tramsun.libs.prefcompat.Pref
-import kotlinx.android.synthetic.main.fragment_more.*
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class ViewFragment : Fragment() {
 
@@ -138,6 +142,7 @@ class ViewFragment : Fragment() {
             videos.userId = mUser.uid
             videos.channelId = campaign?.get(currentNumber)?.channel_id.toString()
 
+            saveIntoFirebase(videos)
             Thread {
                 videosDatabase.videosDao().insert(videos)
             }
@@ -148,6 +153,19 @@ class ViewFragment : Fragment() {
             campaignUpdated = true
             updateCampaignStatus()
         }
+    }
+    private fun saveIntoFirebase(videos: Videos) {
+        val database: DatabaseReference = FirebaseDatabase.getInstance().reference
+        val map: HashMap<String,Any> = HashMap()
+        val id = UUID.randomUUID().toString()
+        map[Constants.id] = id
+        map[Constants.video_id] = videos.videoId
+        map[Constants.created_at] = videos.created_at
+        map[Constants.type] = videos.type
+        map[Constants.user_id] = videos.userId
+        map[Constants.channel_id] = videos.channelId
+
+        database.child(Constants.users).child(mUser.uid).child(Constants.history).child(id).setValue(map)
     }
     private fun updateCampaignStatus() {
         val campaignId = campaign?.get(currentNumber)?.id.toString()
@@ -165,7 +183,13 @@ class ViewFragment : Fragment() {
             }
         })
 
+        addUser(campaignId,mUser.uid)
     }
+
+    private fun addUser(campaignId: String, uid: String) {
+        mainViewModel.addUser(campaignId,uid)
+    }
+
     fun updateUserCoin(){
 
         val updatedCoins = Pref.getString(PrefKeys.coins,"0").toInt() + 32

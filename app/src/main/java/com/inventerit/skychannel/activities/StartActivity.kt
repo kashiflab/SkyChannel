@@ -11,10 +11,16 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
 import com.inventerit.skychannel.Adapter.SliderAdapter
 import com.inventerit.skychannel.R
+import com.inventerit.skychannel.constant.Constants
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.databinding.ActivityStartBinding
+import com.inventerit.skychannel.room.model.Videos
+import com.inventerit.skychannel.room.VideosDatabase
 import com.tramsun.libs.prefcompat.Pref
 import kotlinx.android.synthetic.main.activity_start.*
 
@@ -75,6 +81,7 @@ class StartActivity : AppCompatActivity() {
                 2 -> {
 
                     Pref.putBoolean(PrefKeys.isOnBoarding,true)
+                    Pref.putBoolean(PrefKeys.isFirstTime,true)
                     startActivity(Intent(this, LoginActivity::class.java))
                 }
             }

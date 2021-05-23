@@ -11,14 +11,21 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
 import com.inventerit.skychannel.R
+import com.inventerit.skychannel.constant.Constants
 import com.inventerit.skychannel.constant.PrefKeys
-import com.tbruyelle.rxpermissions3.RxPermissions
+import com.inventerit.skychannel.room.VideosDatabase
+import com.inventerit.skychannel.room.model.Videos
 import com.tramsun.libs.prefcompat.Pref
+import java.util.*
+import kotlin.collections.HashMap
 
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var videosDatabase: VideosDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,12 +35,14 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         setFullScreen()
 
+        videosDatabase = VideosDatabase.getInstance(this)
         mAuth = FirebaseAuth.getInstance()
 
         goToNextActivity()
     }
 
     private fun goToNextActivity(){
+
         val user = mAuth.currentUser
 
         val isOnBoarding = Pref.getBoolean(PrefKeys.isOnBoarding,false)
@@ -52,7 +61,6 @@ class SplashActivity : AppCompatActivity() {
 
         }, 3000)
     }
-
 
     private fun setFullScreen() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

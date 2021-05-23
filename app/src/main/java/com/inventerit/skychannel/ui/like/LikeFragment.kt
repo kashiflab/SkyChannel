@@ -12,26 +12,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.common.api.Scope
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.youtube.YouTubeScopes
 import com.google.firebase.auth.FirebaseAuth
-import com.inventerit.skychannel.R
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.inventerit.skychannel.TimeHelper
 import com.inventerit.skychannel.Utils
 import com.inventerit.skychannel.Utils.hidepDialog
 import com.inventerit.skychannel.YouTubeActivityPresenter
+import com.inventerit.skychannel.constant.Constants
 import com.inventerit.skychannel.constant.PrefKeys
 import com.inventerit.skychannel.databinding.FragmentLikeBinding
 import com.inventerit.skychannel.interfaces.LikeListener
@@ -39,7 +36,7 @@ import com.inventerit.skychannel.interfaces.OnCampaignStatus
 import com.inventerit.skychannel.interfaces.OnGetCampaign
 import com.inventerit.skychannel.interfaces.YouTubeActivityView
 import com.inventerit.skychannel.model.Campaign
-import com.inventerit.skychannel.room.Videos
+import com.inventerit.skychannel.room.model.Videos
 import com.inventerit.skychannel.room.VideosDatabase
 import com.inventerit.skychannel.viewModel.MainViewModel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -47,6 +44,9 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.tramsun.libs.prefcompat.Pref
 import pub.devrel.easypermissions.EasyPermissions
 import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeActivityView {
 
@@ -64,6 +64,7 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
     private var presenter: YouTubeActivityPresenter? = null
 
     private lateinit var videosDatabase: VideosDatabase
+    private var isAlreadyLiked = false
 
     val REQUEST_ACCOUNT_PICKER = 1000
     val REQUEST_AUTHORIZATION = 1001
@@ -97,10 +98,6 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
 
         videosDatabase = VideosDatabase.getInstance(context)
 
-        Thread {
-            likedVideos = videosDatabase.videosDao().getAllLikes("1")
-            Log.i(TAG,likedVideos?.size.toString())
-        }.start()
         mainViewModel.getLikesCampaigns(object : OnGetCampaign<List<Campaign>>{
             override fun onGetCampaign(status: Boolean, result: List<Campaign>) {
                 campaign = ArrayList()
@@ -130,15 +127,15 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
         return binding.root
     }
 
-    private var isAlreadyLiked: Boolean = false
-    fun checkAlreadyLiked(){
-        if (likedVideos?.size!! > 0) {
-            for (liked in likedVideos!!) {
-                if (liked.videoId.equals(campaign?.get(currentNumber)?.video_id.toString())) {
-                    isAlreadyLiked = true
-                }
-            }
-        }
+    private lateinit var videos: List<Videos>
+
+    fun checkAlreadyLiked(videoId: String){
+        Thread {
+            videos = videosDatabase.videosDao().getAllLikes("1", videoId)
+            isAlreadyLiked = videos.isNotEmpty()
+
+            Log.i(TAG, videos.size.toString())
+        }.start()
     }
 
 
@@ -148,7 +145,7 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
         binding.video.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
 
-                checkAlreadyLiked()
+                checkAlreadyLiked(campaign?.get(currentNumber)?.video_id.toString())
                 Handler(Looper.myLooper()!!).postDelayed({
                     if(videoId.isNotEmpty()) {
                         if(isAlreadyLiked){
@@ -159,16 +156,20 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
                             binding.like.isEnabled = false
                         }
                         val time = campaign?.get(currentNumber)?.total_time?.toLong()!! * 1000
-                        startTimer(time,false)
+//                        startTimer(time,false)
                         youTubePlayer.loadVideo(videoId, 0f)
                         player = youTubePlayer
                     }
                 },500)
 
                 binding.nextBtn.setOnClickListener {
-                    checkAlreadyLiked()
+
                     Handler(Looper.myLooper()!!).postDelayed({
                         if (currentNumber < campaign?.size!! - 1) {
+
+                            currentNumber += 1
+
+                            checkAlreadyLiked(campaign?.get(currentNumber)?.video_id.toString())
                             if(isAlreadyLiked){
                                 binding.like.text = "Liked"
                                 binding.like.isEnabled = false
@@ -184,9 +185,8 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
                                     }
                                 }
                             }
-                            currentNumber++
                             val time = campaign?.get(currentNumber)?.total_time?.toLong()!! * 1000
-                            startTimer(time,false)
+//                            startTimer(time,false)
                             binding.videoTitle.text = campaign?.get(currentNumber)?.video_title
                             youTubePlayer.loadVideo(campaign?.get(currentNumber)?.video_id!!, 0f)
                             player = youTubePlayer
@@ -196,6 +196,21 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
                     },500)
                 }
 
+            }
+            override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
+                super.onCurrentSecond(youTubePlayer, second)
+                val time = campaign?.get(currentNumber)?.total_time?.toInt()!! - second.toInt()
+                if(time>=0){
+                    if(time==0){
+                        binding.like.isEnabled = !isAlreadyLiked
+                        binding.timer.text = time.toString()
+                    }else{
+                        binding.coins.visibility = View.VISIBLE
+                        binding.coins.text = "220"
+                        binding.like.isEnabled = false
+                        binding.timer.text = time.toString()
+                    }
+                }
             }
         })
     }
@@ -348,7 +363,21 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
 
         saveIntoDB(videos)
         updateCampaignStatus()
+        saveIntoFirebase(videos)
         updateUserCoins()
+    }
+    private fun saveIntoFirebase(videos: Videos) {
+        val database: DatabaseReference = FirebaseDatabase.getInstance().reference
+        val map: HashMap<String,Any> = HashMap()
+        val id = UUID.randomUUID().toString()
+        map[Constants.id] = id
+        map[Constants.video_id] = videos.videoId
+        map[Constants.created_at] = videos.created_at
+        map[Constants.type] = videos.type
+        map[Constants.user_id] = videos.userId
+        map[Constants.channel_id] = videos.channelId
+
+        database.child(Constants.users).child(mUser.uid).child(Constants.history).child(id).setValue(map)
     }
 
     private lateinit var insertThread: Thread
@@ -361,7 +390,8 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
 
 
     private fun updateUserCoins(){
-        val updatedCoins = (coins.toInt() + 50).toString()
+        val newCoins = 50
+        val updatedCoins = (coins.toInt() + newCoins).toString()
         mainViewModel.updateCoins(updatedCoins, object : LikeListener {
             override fun onLikeStarted() {
                 Log.i(TAG,"Updating coins")
@@ -370,7 +400,7 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
             override fun onLikedSuccess() {
                 startTimer(10000,true)
                 if(context!=null) {
-                    Toast.makeText(context, "Received $updatedCoins coins", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Received $newCoins coins", Toast.LENGTH_LONG).show()
                 }
                 Log.i(TAG,"Coins are updated")
             }
@@ -396,6 +426,11 @@ class LikeFragment : Fragment(), EasyPermissions.PermissionCallbacks, YouTubeAct
             }
         })
 
+        addUser(campaignId,mUser.uid)
+    }
+
+    private fun addUser(campaignId: String, uid: String) {
+        mainViewModel.addUser(campaignId,uid)
     }
 
     override fun onSubscribetionFail() {

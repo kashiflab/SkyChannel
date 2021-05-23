@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.CampaignDetailActivity">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        app:cardCornerRadius="10dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingEnd="10dp"
+            android:id="@+id/clLayout"
+            android:background="@color/cardBgColor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="5dp"
+                android:layout_height="0dp"
+                android:background="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/cp_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/cp_image" />
+
+            <ImageView
+                android:layout_marginStart="10dp"
+                android:id="@+id/cp_image"
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:src="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/view2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/videoTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Dummy Title"
+                android:textColor="@color/contentTextColor"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@id/views"
+                app:layout_constraintStart_toEndOf="@+id/cp_image"
+                app:layout_constraintTop_toTopOf="@+id/cp_image" />
+
+            <TextView
+                android:id="@+id/views"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="10/10 Views"
+                android:textColor="@color/contentTextColor"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@id/progress"
+                app:layout_constraintStart_toEndOf="@+id/cp_image"
+                app:layout_constraintTop_toBottomOf="@+id/videoTitle" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_clock"
+                android:drawablePadding="10dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="start|center"
+                android:text="45"
+                android:textColor="@color/contentTextColor"
+                android:textSize="14sp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/views"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/views" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:indicatorColor="@color/red_700"
+                app:layout_constraintBottom_toBottomOf="@+id/cp_image"
+                app:layout_constraintEnd_toEndOf="@+id/time"
+                app:layout_constraintStart_toStartOf="@+id/videoTitle"
+                app:layout_constraintTop_toBottomOf="@id/views" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Users"
+        android:textColor="@color/contentTextColor"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/views"
+        app:layout_constraintStart_toEndOf="@+id/cp_image"
+        app:layout_constraintTop_toTopOf="@+id/cp_image" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/cp_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cp_image" />
+
+    <TextView
+        android:id="@+id/nodata"
+        android:text="No Data Found"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:visibility="gone"
+        android:fontFamily="sans-serif-medium"
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/userRV"
+        android:layout_marginTop="10dp"
+        tools:listitem="@layout/user_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>
