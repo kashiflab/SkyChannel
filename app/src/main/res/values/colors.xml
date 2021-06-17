@@ -16,4 +16,5 @@
     <color name="cardBgColor">#f6f6f6</color>
     <color name="gray">#CACACA</color>
     <color name="light_red">#FF3030</color>
+    <color name="text_black_gray">#727272</color>
 </resources>

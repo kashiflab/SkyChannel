@@ -7,31 +7,31 @@
 
     <fragment
         android:id="@+id/nav_subscribe"
-        android:name="com.inventerit.skychannel.ui.subscribe.SubscribeFragment"
+        android:name="com.sidhow.skychannel.ui.subscribe.SubscribeFragment"
         android:label="@string/subscribe"
         tools:layout="@layout/fragment_subscribe" />
 
     <fragment
         android:id="@+id/nav_like"
-        android:name="com.inventerit.skychannel.ui.like.LikeFragment"
+        android:name="com.sidhow.skychannel.ui.like.LikeFragment"
         android:label="@string/like"
         tools:layout="@layout/fragment_like" />
 
     <fragment
         android:id="@+id/nav_view"
-        android:name="com.inventerit.skychannel.ui.view.ViewFragment"
+        android:name="com.sidhow.skychannel.ui.view.ViewFragment"
         android:label="@string/view"
         tools:layout="@layout/fragment_view" />
 
     <fragment
         android:id="@+id/nav_campaign"
-        android:name="com.inventerit.skychannel.ui.campaign.CampaignFragment"
+        android:name="com.sidhow.skychannel.ui.campaign.CampaignFragment"
         android:label="@string/campaign"
         tools:layout="@layout/fragment_campaign" />
 
     <fragment
         android:id="@+id/nav_more"
-        android:name="com.inventerit.skychannel.ui.more.MoreFragment"
+        android:name="com.sidhow.skychannel.ui.more.MoreFragment"
         android:label="@string/more"
         tools:layout="@layout/fragment_more" />
 

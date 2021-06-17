@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:weightSum="5"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sidhow.skychannel.activities.ViewsActivity">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+        android:id="@+id/video"
+        android:layout_weight="3.7"
+        android:layout_width="match_parent"
+        app:showSeekBar="false"
+        app:showFullScreenButton="false"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/videoTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:gravity="start|center"
+        android:layout_weight="0.4"
+        android:layout_margin="10dp"
+        android:text="Video Title: "
+        android:textColor="@color/contentTextColor"
+        android:textSize="16sp"
+        android:id="@+id/videoTitle"
+        app:layout_constraintTop_toBottomOf="@id/video"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+    <LinearLayout
+        android:layout_weight="0.3"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <TextView
+            android:id="@+id/duration"
+            android:text="0"
+            android:textSize="18sp"
+            android:gravity="start|center"
+            android:drawablePadding="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/contentTextColor"
+            android:drawableLeft="@drawable/ic_adjust"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <View
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/red_500"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/coins"
+            android:text="0"
+            android:textSize="18sp"
+            android:gravity="start|center"
+            android:drawablePadding="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/contentTextColor"
+            android:drawableLeft="@drawable/ic_money_bag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_weight="0.6"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <com.google.android.material.button.MaterialButton
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintStart_toEndOf="@id/subscribe"
+            android:id="@+id/nextBtn"
+            android:text="See Next"
+            android:textAllCaps="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/note" />
+    </LinearLayout>
+
+
+</LinearLayout>

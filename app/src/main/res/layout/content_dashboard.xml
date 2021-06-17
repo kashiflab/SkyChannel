@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_alignParentTop="true"
+        android:id="@+id/top_constant"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/action_bar_home_frag"
+            android:layout_alignParentTop="true"
+
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="@drawable/edit_rectangle_gradient"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Sky Channel"
+                    android:textSize="20sp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/white"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    />
+
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="3dp"
+            android:id="@+id/coin"
+            app:cardCornerRadius="10dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+
+            app:layout_constraintTop_toBottomOf="@id/action_bar_home_frag"
+            app:layout_constraintBottom_toBottomOf="@id/action_bar_home_frag"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:background="@drawable/home_top2"
+                android:backgroundTint="@color/red_500"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/coin_only_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="COIN"
+                    android:textSize="25sp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="15dp"
+                    android:textColor="@color/white"
+
+
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txtCoin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="450"
+                    android:textSize="25sp"
+                    android:layout_marginEnd="80dp"
+                    android:layout_marginTop="15dp"
+                    android:textColor="@color/white"
+
+
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#CEB5B5"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="2dp"
+
+                    app:layout_constraintStart_toStartOf="@id/coin_only_txt"
+                    app:layout_constraintEnd_toStartOf="@+id/image"
+                    app:layout_constraintBottom_toTopOf="@+id/description"
+                    />
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/img_home_right"
+                    android:scaleType="fitXY"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="80dp"
+                    android:layout_marginBottom="10dp"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/image"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:textAlignment="center"
+                        android:text="View Subscribe &amp; Like for earning more coins"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        tools:ignore="SmallSp" />
+
+                </LinearLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/top_constant"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:weightSum="4"
+                >
+
+                <RelativeLayout
+                    android:id="@+id/btView"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="105dp"
+                    android:background="@drawable/empty_back"
+                    android:layout_marginEnd="10dp"
+                    >
+
+                    <LinearLayout
+                        android:id="@+id/views"
+                        android:paddingVertical="10dp"
+                        android:background="@drawable/bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerInParent="true"
+                        >
+
+                        <ImageView
+                            android:id="@+id/image1"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/img_youtube"
+                            android:layout_gravity="center"
+                            />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="View"
+                            android:textAlignment="center"
+                            android:layout_marginTop="5dp"
+                            />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_marginEnd="10dp"
+                    android:id="@+id/btLike"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="105dp"
+                    android:background="@drawable/empty_back"
+                    >
+
+                    <LinearLayout
+                        android:id="@+id/like"
+                        android:paddingVertical="10dp"
+                        android:background="@drawable/bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerInParent="true"
+                        >
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/img_like"
+                            android:layout_gravity="center"
+                            />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Like"
+                            android:textAlignment="center"
+                            android:layout_marginTop="5dp"
+                            />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_marginEnd="10dp"
+                    android:id="@+id/btSub"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="105dp"
+                    android:background="@drawable/empty_back"
+                    >
+
+                    <LinearLayout
+                        android:id="@+id/subscribe"
+                        android:paddingVertical="10dp"
+                        android:background="@drawable/bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerInParent="true"
+                        >
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/img_subscribe"
+                            android:layout_gravity="center"
+                            />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Subscribe"
+                            android:textAlignment="center"
+                            android:layout_marginTop="5dp"
+                            />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/btCampaign"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="105dp"
+                    android:background="@drawable/empty_back"
+                    >
+
+                    <LinearLayout
+                        android:id="@+id/campaign"
+                        android:paddingVertical="10dp"
+                        android:background="@drawable/bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerInParent="true"
+                        >
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/img_campaign"
+                            android:layout_gravity="center"
+                            />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Campaign"
+                            android:textAlignment="center"
+                            android:layout_marginTop="5dp"
+                            />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

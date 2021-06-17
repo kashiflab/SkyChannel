@@ -8,18 +8,34 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:229285991676:android:6602cb49d97fd5bfa97379",
+        "mobilesdk_app_id": "1:229285991676:android:68fdc5b2ba018db5a97379",
         "android_client_info": {
-          "package_name": "com.inventerit.skychannel"
+          "package_name": "com.sidhow.skychannel"
         }
       },
       "oauth_client": [
         {
-          "client_id": "229285991676-psqs4t708ig0d59pntd9ed1lmra4j8j6.apps.googleusercontent.com",
+          "client_id": "229285991676-ekjteqmd5njjkmib14mln48oph4altdo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.inventerit.skychannel",
+            "package_name": "com.sidhow.skychannel",
             "certificate_hash": "aababec64513670897f61436d789ec04959bbdb8"
+          }
+        },
+        {
+          "client_id": "229285991676-g3kbfi2p1p92ehamo18ca418qrj83a63.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sidhow.skychannel",
+            "certificate_hash": "711c87db62c6c05090c2d074465b6f308e7132b8"
+          }
+        },
+        {
+          "client_id": "229285991676-q6m9e4p5t34utqf2c3rffi97m5qvknep.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sidhow.skychannel",
+            "certificate_hash": "f48904ea4337bbde0ccc53799d9f0b802078a696"
           }
         },
         {

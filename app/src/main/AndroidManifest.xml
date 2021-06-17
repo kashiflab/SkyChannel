@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.inventerit.skychannel">
+    package="com.sidhow.skychannel">
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.NETWORK" />
@@ -9,22 +9,31 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
-        android:name=".MyApp"
+        android:name="com.sidhow.skychannel.MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SkyChannel">
-        <activity android:name=".activities.VIPMembershipActivity"></activity>
-        <activity android:name=".activities.SubscriptionActivity" />
-        <activity android:name=".activities.CampaignDetailActivity" />
-        <activity android:name=".activities.BuyPointsActivity" />
+        <activity android:name="com.sidhow.skychannel.activities.ViewsActivity"></activity>
+        <activity android:name="com.sidhow.skychannel.activities.LikeActivity" />
+        <activity android:name="com.sidhow.skychannel.activities.CampaignActivity" />
+        <activity android:name="com.sidhow.skychannel.activities.SubscribeActivity" />
         <activity
-            android:name=".activities.AddCampaignActivity"
+            android:name="com.sidhow.skychannel.activities.DashboardActivity"
+            android:label="@string/title_activity_dashboard"
+            android:theme="@style/Theme.SkyChannel.NoActionBar" />
+        <activity android:name="com.sidhow.skychannel.activities.HomeActivity" />
+        <activity android:name="com.sidhow.skychannel.activities.VIPMembershipActivity" />
+        <activity android:name="com.sidhow.skychannel.activities.SubscriptionActivity" />
+        <activity android:name="com.sidhow.skychannel.activities.CampaignDetailActivity" />
+        <activity android:name="com.sidhow.skychannel.activities.BuyPointsActivity" />
+        <activity
+            android:name="com.sidhow.skychannel.activities.AddCampaignActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.SplashActivity"
+            android:name="com.sidhow.skychannel.activities.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SkyChannel.NoActionBar">
             <intent-filter>
@@ -34,15 +43,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.LoginActivity"
+            android:name="com.sidhow.skychannel.activities.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SkyChannel.NoActionBar" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name="com.sidhow.skychannel.activities.MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.StartActivity"
+            android:name="com.sidhow.skychannel.activities.StartActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SkyChannel.NoActionBar" />
     </application>

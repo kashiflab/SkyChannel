@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:scrollbars="none"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.more.MoreFragment">
+    tools:context="com.sidhow.skychannel.ui.more.MoreFragment">
 
     <LinearLayout
         android:padding="20dp"

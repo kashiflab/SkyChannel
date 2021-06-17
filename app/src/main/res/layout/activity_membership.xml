@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.VIPMembershipActivity">
+    tools:context="com.sidhow.skychannel.activities.VIPMembershipActivity">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"
@@ -19,17 +19,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="Contact us if you have any problem with in app purchase by email example@gmail.com"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="15dp"
+            android:text="\u25CF Remove Ads\n\u25CF Reduce 20% campaign cost\n\u25CF Remove countdown timer after subscribed channel"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="Contact us if you have any problem with in app purchase by email SidhOWofficial.sak@gmail.com"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.recyclerview.widget.RecyclerView

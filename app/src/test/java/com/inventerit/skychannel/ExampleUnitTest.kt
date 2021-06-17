@@ -1,4 +1,4 @@
-package com.inventerit.skychannel
+package com.sidhow.skychannel
 
 import org.junit.Test
 

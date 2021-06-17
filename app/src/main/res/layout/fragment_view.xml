@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view.ViewFragment">
+    tools:context="com.sidhow.skychannel.ui.view.ViewFragment">
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -54,7 +54,7 @@
 
         <TextView
             android:id="@+id/duration"
-            android:text="52"
+            android:text="0"
             android:textSize="18sp"
             android:gravity="start|center"
             android:drawablePadding="10dp"
@@ -71,7 +71,7 @@
             android:layout_height="match_parent"/>
         <TextView
             android:id="@+id/coins"
-            android:text="32"
+            android:text="0"
             android:textSize="18sp"
             android:gravity="start|center"
             android:drawablePadding="10dp"

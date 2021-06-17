@@ -45,4 +45,8 @@
     </string-array>
 
     <string name="pre_prompt">Select</string>
+    <string name="title_activity_dashboard">DashboardActivity</string>
+    <string name="buyCoin">Buy Coins</string>
+    <string name="vip_account">VIP Account</string>
+    <string name="subscriptions">Subscriptions</string>
 </resources>

@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.subscribe.SubscribeFragment">
+    tools:context="com.sidhow.skychannel.ui.subscribe.SubscribeFragment">
         <ProgressBar
             android:id="@+id/progressBar"
             android:visibility="gone"
@@ -120,6 +120,7 @@
             android:layout_weight="0.5"
             android:layout_marginStart="20dp"
             android:id="@+id/subscribe"
+            android:enabled="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Subscribe"

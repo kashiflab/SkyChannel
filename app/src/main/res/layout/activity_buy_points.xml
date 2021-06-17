@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.BuyPointsActivity">
+    tools:context="com.sidhow.skychannel.activities.BuyPointsActivity">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:text="Contact us if you have any problem with in app purchase by email example@gmail.com"
+            android:text="Contact us if you have any problem with in app purchase by email SidhOWofficial.sak@gmail.com"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

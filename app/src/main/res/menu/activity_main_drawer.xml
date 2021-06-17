@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/buyCoins"
+            android:icon="@drawable/ic_buy"
+            android:title="@string/buyCoin" />
+        <item
+            android:id="@+id/vipAccount"
+            android:icon="@drawable/ic_vip"
+            android:title="@string/vip_account" />
+        <item
+            android:id="@+id/subscriptions"
+            android:icon="@drawable/ic_subscribe"
+            android:title="@string/subscriptions" />
+    </group>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/feedback"
+            android:icon="@drawable/ic_feedback"
+            android:title="Feedback" />
+        <item
+            android:id="@+id/share"
+            android:icon="@drawable/ic_sharing"
+            android:title="Share" />
+        <item
+            android:id="@+id/privacy"
+            android:icon="@drawable/ic_privacy_policy"
+            android:title="Privacy Policy" />
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/ic_logout"
+            android:title="Logout" />
+
+    </group>
+</menu>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/fragment_container"
     android:background="@color/black_700"
-    tools:context=".activities.StartActivity">
+    tools:context="com.sidhow.skychannel.activities.StartActivity">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
@@ -29,17 +29,19 @@
         android:orientation="horizontal">
     </LinearLayout>
 
-    <Button
-        app:backgroundTint="@android:color/transparent"
+    <com.google.android.material.button.MaterialButton
+        app:backgroundTint="@color/black_700"
         android:text="Back"
         android:id="@+id/backBtn"
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        app:backgroundTint="@android:color/transparent"
+    <com.google.android.material.button.MaterialButton
+        app:backgroundTint="@color/black_700"
+        android:textColor="@color/white"
         android:text="Next"
         android:id="@+id/nextBtn"
         android:layout_width="wrap_content"
