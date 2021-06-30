@@ -230,6 +230,7 @@ class LoginActivity : AppCompatActivity(), YouTubeActivityView {
                     }
 
 //                    Handler(Looper.myLooper()!!).postDelayed({
+
                         if(!emailList?.contains(task.result?.user?.email.toString())!!) {
                             setUserDetails(
                                 task.result?.user?.displayName.toString(),
@@ -296,12 +297,12 @@ class LoginActivity : AppCompatActivity(), YouTubeActivityView {
         finish()
     }
 
-    private var emailList: ArrayList<String>? = null
+    private var emailList: ArrayList<String> = ArrayList()
     private fun getUsers(){
         val database = Firebase.database.reference.child("users")
 
         database.get().addOnSuccessListener {
-            emailList = ArrayList()
+            emailList.clear()
             val children = it.children
             children.forEach {
                 emailList!!.add(it.child("email").value.toString())

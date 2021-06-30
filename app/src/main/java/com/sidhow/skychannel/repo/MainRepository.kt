@@ -107,7 +107,7 @@ class MainRepository {
 
     fun getVideoDetails(video_id: String, onVideoDetails: OnVideoDetails<Api>){
         apiService = ApiUtils.getAPIService()
-        apiService?.getVideoDetails("snippet,contentDetails", video_id, Constants.DATA_API_KEY)
+        apiService?.getVideoDetails("snippet,contentDetails", video_id, Constants.CAMPAIGN_KEY)
             ?.enqueue(object : Callback<Api> {
                 override fun onResponse(call: Call<Api>, response: Response<Api>) {
                     if (response.isSuccessful) {
@@ -116,6 +116,8 @@ class MainRepository {
                         } else {
                             onVideoDetails.onVideoDetails(false, response.body())
                         }
+                    }else{
+                        onVideoDetails.onVideoDetails(false,response.body())
                     }
                 }
 

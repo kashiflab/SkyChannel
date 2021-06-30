@@ -68,7 +68,7 @@ public class YouTubeActivityPresenter {
                 response = request.setMaxResults(50L)
                         .setMine(true)
                         .execute();
-            } catch (IOException e) {
+            } catch (Exception e) {
                /* if you got error message below
                 "message" : "Access Not Configured. YouTube Data API has not been used in project YOUR_PROJECT_ID before or it is disabled.
                 then goto following link and enable the access

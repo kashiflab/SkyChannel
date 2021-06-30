@@ -268,7 +268,14 @@ class LikeActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, Y
             Utils.initpDialog(this, "Please wait...")
             Utils.showpDialog()
             // handing subscribe task by presenter
-            presenter?.likeToYouTubeChannel(mCredential, campaign?.get(currentNumber)?.video_id.toString()) // pass youtube channelId as second parameter
+            if(currentNumber<=campaign!!.size) {
+                presenter?.likeToYouTubeChannel(
+                    mCredential,
+                    campaign?.get(currentNumber)?.video_id.toString()
+                ) // pass youtube channelId as second parameter
+            }else{
+                Toast.makeText(this,"Cannot Like right now. Please try again.",Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -436,14 +443,14 @@ class LikeActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, Y
         Toast.makeText(this, "Already Liked",
             Toast.LENGTH_LONG).show()
 
-        val videos = Videos()
-        videos.videoId = campaign?.get(currentNumber)?.video_id.toString()
-        videos.created_at = TimeHelper.getDate()
-        videos.type = "1"
-        videos.userId = mUser.uid
-        videos.channelId = campaign?.get(currentNumber)?.channel_id.toString()
-
-        saveIntoDB(videos)
+//        val videos = Videos()
+//        videos.videoId = campaign?.get(currentNumber)?.video_id.toString()
+//        videos.created_at = TimeHelper.getDate()
+//        videos.type = "1"
+//        videos.userId = mUser.uid
+//        videos.channelId = campaign?.get(currentNumber)?.channel_id.toString()
+//
+//        saveIntoDB(videos)
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>?) {

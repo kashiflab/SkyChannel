@@ -190,8 +190,14 @@ class ViewsActivity : AppCompatActivity() {
     }
 
     fun updateUserCoin(){
+        var updatedCoins: Int = 450
+        updatedCoins = try{
+            Pref.getString(PrefKeys.coins,"0").toInt() + campaign?.get(currentNumber)?.coins?.toInt()!!
+        }catch (e: Exception){
+            Pref.getString(PrefKeys.coins,"0").toInt() + 100
+        }
 
-        val updatedCoins = Pref.getString(PrefKeys.coins,"0").toInt() + campaign?.get(currentNumber)?.coins?.toInt()!!
+
         mainViewModel.updateCoins(updatedCoins.toString(), object : LikeListener {
             override fun onLikeStarted() {
                 coinsAdded = true

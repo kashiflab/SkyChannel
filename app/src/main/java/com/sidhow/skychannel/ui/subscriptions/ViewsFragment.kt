@@ -65,7 +65,7 @@ class ViewsFragment : Fragment() {
                                 }
                             }
                         }
-                        adapter = SubscriptionAdapter(context!!, campaignList)
+                        adapter = SubscriptionAdapter(requireActivity(), campaignList)
                         binding.subs.adapter = adapter
                     }
                 },500)

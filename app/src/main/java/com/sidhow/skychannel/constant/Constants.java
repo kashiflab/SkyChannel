@@ -39,5 +39,7 @@ abstract public class Constants {
     public static String is_vip = "is_vip";
 
 
+    public static String CAMPAIGN_KEY = "AIzaSyAvmd75-cd6CCr8eCRKm7CxrXr53m5FQ58";
     public static String DATA_API_KEY = "AIzaSyDUqZdrWnKoGlKVF3cMllPqybWi2TO9NIg";
+
 }

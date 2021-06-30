@@ -57,7 +57,8 @@ class AddCampaignActivity : AppCompatActivity() {
                     binding.videoTitle.text = snippet?.title.toString()
                     getDuration(result?.items?.get(0)?.contentDetails!!)
                 } else {
-                    Toast.makeText(this@AddCampaignActivity, "Some error occurred", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@AddCampaignActivity, "Quota Exceeded. Try again later.", Toast.LENGTH_LONG).show()
+                    return
                 }
             }
         })

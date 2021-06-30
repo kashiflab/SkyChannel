@@ -7,12 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.billingclient.api.*
+import com.google.gson.Gson
 import com.sidhow.skychannel.Adapter.SkuAdapter
 import com.sidhow.skychannel.Utils
+import com.sidhow.skychannel.constant.PrefKeys
 import com.sidhow.skychannel.databinding.ActivityBuyPointsBinding
+import com.sidhow.skychannel.interfaces.LikeListener
 import com.sidhow.skychannel.interfaces.OnFetchSkuDetails
 import com.sidhow.skychannel.model.SkuProducts
+import com.sidhow.skychannel.model.User
 import com.sidhow.skychannel.viewModel.CreditsViewModel
+import com.tramsun.libs.prefcompat.Pref
 
 class BuyPointsActivity : AppCompatActivity(), PurchasesUpdatedListener,
     SkuAdapter.OnItemClickListener {
@@ -28,6 +33,8 @@ class BuyPointsActivity : AppCompatActivity(), PurchasesUpdatedListener,
     private var skuDetail: List<SkuDetails> = ArrayList()
     private var skuProducts: List<SkuProducts> = ArrayList()
 
+    private var coins: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBuyPointsBinding.inflate(layoutInflater)
@@ -35,6 +42,8 @@ class BuyPointsActivity : AppCompatActivity(), PurchasesUpdatedListener,
 
         supportActionBar?.title = "Buy Coins"
         actionBar?.setDisplayHomeAsUpEnabled(true)
+
+        coins = Pref.getString(PrefKeys.coins,"0").toInt()
 
         creditsViewModel = ViewModelProvider(this).get(CreditsViewModel::class.java)
 
@@ -141,6 +150,20 @@ class BuyPointsActivity : AppCompatActivity(), PurchasesUpdatedListener,
                     // Acknowledge purchase and grant the item to the user
                     for (product in skuProducts) {
                         if (purchase.skus.equals(product.sku)) {
+                            val newCoins = coins + product.coins.toInt()
+                            creditsViewModel.updateCoins(newCoins.toString(),object :LikeListener{
+                                override fun onLikeStarted() {
+
+                                }
+
+                                override fun onLikedSuccess() {
+
+                                }
+
+                                override fun onLikedFailed() {
+
+                                }
+                            })
                             acknowledgePurchaseConsume(
                                 product.coins.toInt(),
                                 purchase
@@ -176,10 +199,10 @@ class BuyPointsActivity : AppCompatActivity(), PurchasesUpdatedListener,
             Toast.makeText(this, "error_try_again_later", Toast.LENGTH_SHORT).show()
         }
     }
-    fun acknowledgePurchaseConsume(credits: Int, purchase: Purchase) {
+    private fun acknowledgePurchaseConsume(credits: Int, purchase: Purchase) {
         Toast.makeText(
             this@BuyPointsActivity,
-            "Purchased Successfully ${credits}",
+            "Purchased Successfully $credits",
             Toast.LENGTH_LONG
         ).show()
 
