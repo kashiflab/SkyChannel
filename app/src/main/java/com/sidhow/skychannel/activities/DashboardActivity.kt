@@ -1,11 +1,18 @@
 package com.sidhow.skychannel.activities
 
+import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -17,6 +24,9 @@ import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.sidhow.skychannel.BuildConfig
 import com.sidhow.skychannel.R
 import com.sidhow.skychannel.Utils
 import com.sidhow.skychannel.constant.Constants
@@ -56,6 +66,13 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         mainViewModel.saveLikesCampaigns()
         mainViewModel.saveViewsCampaigns()
 
+
+        val isUpdateAvailable = Pref.getString(Constants.versionName,"")
+
+        if(isUpdateAvailable != BuildConfig.VERSION_NAME) {
+//            showCustomDialog()
+        }
+
         Utils.initpDialog(this,"Please wait")
         Utils.showpDialog()
         auth = FirebaseAuth.getInstance()
@@ -87,6 +104,9 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
                         binding.root.txtCoin.text = result.coins
                     }
+                    if(result.coins==null || result.coins.isEmpty()){
+                        startActivity(Intent(this@DashboardActivity,LoginActivity::class.java))
+                    }
                     Pref.putString(PrefKeys.username, result.username)
                     Pref.putString(PrefKeys.coins, result.coins)
                     Pref.putString(PrefKeys.photoUrl, result.photoUrl)
@@ -113,7 +133,29 @@ class DashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     }
 
+    private fun showCustomDialog() {
+        // custom dialog
+        val view: View = LayoutInflater.from(this)
+            .inflate(R.layout.custom_dialog, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(view)
+            .setCancelable(false)
+            .create()
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val update = view.findViewById<Button>(R.id.update)
+
+        update.setOnClickListener {
+            val feedback = "https://play.google.com/store/apps/details?id=com.sidhow.skychannel"
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(feedback))
+            startActivity(browserIntent)
+            dialog?.dismiss()
+        }
+
+        dialog?.show()
+    }
+
     override fun onResume() {
+
         super.onResume()
         mainViewModel.saveSubsCampaigns(object : OnGetCampaign<List<Campaign>> {
             override fun onGetCampaign(status: Boolean, result: List<Campaign>) {

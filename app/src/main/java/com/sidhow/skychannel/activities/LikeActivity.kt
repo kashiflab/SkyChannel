@@ -268,7 +268,7 @@ class LikeActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks, Y
             Utils.initpDialog(this, "Please wait...")
             Utils.showpDialog()
             // handing subscribe task by presenter
-            if(currentNumber<=campaign!!.size) {
+            if(currentNumber<campaign!!.size) {
                 presenter?.likeToYouTubeChannel(
                     mCredential,
                     campaign?.get(currentNumber)?.video_id.toString()

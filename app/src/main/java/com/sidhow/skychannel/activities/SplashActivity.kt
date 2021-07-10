@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.sidhow.skychannel.R
+import com.sidhow.skychannel.constant.Constants
 import com.sidhow.skychannel.constant.PrefKeys
 import com.sidhow.skychannel.interfaces.OnComplete
 import com.sidhow.skychannel.model.User
@@ -23,6 +24,7 @@ import com.sidhow.skychannel.room.VideosDatabase
 import com.sidhow.skychannel.viewModel.SaveCampaignViewModel
 import com.tramsun.libs.prefcompat.Pref
 import java.util.*
+import kotlin.collections.HashMap
 
 class SplashActivity : AppCompatActivity() {
 
@@ -46,6 +48,7 @@ class SplashActivity : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
+        getLatestVersion()
 
         val user = mAuth.currentUser
         val isOnBoarding = Pref.getBoolean(PrefKeys.isOnBoarding,false)
@@ -71,6 +74,22 @@ class SplashActivity : AppCompatActivity() {
 
             }, 3000)
         }
+    }
+
+    private fun getLatestVersion() {
+
+        val databaseReference = FirebaseDatabase.getInstance().reference
+
+        databaseReference.child("Android").addValueEventListener(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.i("versionName",snapshot.child("versionName").value.toString())
+                Pref.putString(Constants.versionName,snapshot.child("versionName").value.toString())
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
     }
 
 

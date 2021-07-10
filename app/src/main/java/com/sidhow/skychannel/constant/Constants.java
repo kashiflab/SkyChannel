@@ -37,7 +37,8 @@ abstract public class Constants {
     public static String channel_title = "channel_title";
     public static String channel_image = "channel_image";
     public static String is_vip = "is_vip";
-
+    public static String versionName = "VERSION_NAME";
+    public static String userAppVersion = "AppVersion";
 
     public static String CAMPAIGN_KEY = "AIzaSyAvmd75-cd6CCr8eCRKm7CxrXr53m5FQ58";
     public static String DATA_API_KEY = "AIzaSyDUqZdrWnKoGlKVF3cMllPqybWi2TO9NIg";

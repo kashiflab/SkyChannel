@@ -7,5 +7,5 @@ data class SkuProducts(
     val sku: String,
     val title: String,
     val desc: String,
-    val type: String
+    val type: String //1 for coins 0 for subscription
 )

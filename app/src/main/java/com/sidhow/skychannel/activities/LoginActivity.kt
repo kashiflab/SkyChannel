@@ -182,6 +182,13 @@ class LoginActivity : AppCompatActivity(), YouTubeActivityView {
             getAllHistory(user,task)
 
             getSubscriptionFromYoutube(task)
+        }else if(!emailList?.contains(task.result?.user?.email.toString())!!) {
+            setUserDetails(
+                task.result?.user?.displayName.toString(),
+                task.result?.user?.email.toString(),
+                task.result?.user?.photoUrl.toString(),
+                task.result?.user?.uid.toString()
+            )
         }else{
             goToMain()
         }

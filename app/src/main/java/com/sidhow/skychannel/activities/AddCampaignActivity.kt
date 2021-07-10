@@ -57,8 +57,8 @@ class AddCampaignActivity : AppCompatActivity() {
                     binding.videoTitle.text = snippet?.title.toString()
                     getDuration(result?.items?.get(0)?.contentDetails!!)
                 } else {
-                    Toast.makeText(this@AddCampaignActivity, "Quota Exceeded. Try again later.", Toast.LENGTH_LONG).show()
-                    return
+                    Toast.makeText(this@AddCampaignActivity, "Server under maintenance", Toast.LENGTH_LONG).show()
+                    onBackPressed()
                 }
             }
         })
@@ -185,7 +185,7 @@ class AddCampaignActivity : AppCompatActivity() {
                 coins = genRandomNumber(30,65).toString()
             }
             !in 40 downTo 20 -> {
-                coins = genRandomNumber(150,400).toString()
+                coins = genRandomNumber(150,200).toString()
             }
             !in 60 downTo 40 -> {
                 coins = genRandomNumber(350,600).toString()

@@ -67,8 +67,12 @@ class LikesFragment : Fragment() {
                                 }
                             }
                         }
-                        adapter = SubscriptionAdapter(requireActivity(), campaignList)
-                        binding.subs.adapter = adapter
+                        try {
+                            adapter = SubscriptionAdapter(requireActivity(), campaignList)
+                            binding.subs.adapter = adapter
+                        }catch (e: Exception){
+                            e.printStackTrace()
+                        }
                     }
                 },500)
             }
