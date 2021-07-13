@@ -5,12 +5,12 @@ import android.accounts.AccountManager
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.ConnectionResult
@@ -21,6 +21,9 @@ import com.google.api.services.youtube.YouTubeScopes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.sidhow.skychannel.TimeHelper
 import com.sidhow.skychannel.Utils
 import com.sidhow.skychannel.YouTubeActivityPresenter
@@ -32,12 +35,10 @@ import com.sidhow.skychannel.model.Campaign
 import com.sidhow.skychannel.room.VideosDatabase
 import com.sidhow.skychannel.room.model.Videos
 import com.sidhow.skychannel.viewModel.MainViewModel
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.tramsun.libs.prefcompat.Pref
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class SubscribeActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,

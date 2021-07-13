@@ -88,6 +88,7 @@ class ViewsActivity : AppCompatActivity() {
                 }
 
                 binding.nextBtn.setOnClickListener {
+                    coinsAdded = false
                     startNextVideo(youTubePlayer)
                 }
 
@@ -102,11 +103,12 @@ class ViewsActivity : AppCompatActivity() {
                     binding.duration.text = updateNumber.toString()
                     if(updateNumber==1) {
                         addView()
-                        try {
-                            youTubePlayer.pause()
-                        }catch (e: Exception){
-                            e.printStackTrace()
-                        }
+                        binding.duration.text = "0"
+//                        try {
+//                            youTubePlayer.pause()
+//                        }catch (e: Exception){
+//                            e.printStackTrace()
+//                        }
                     }
                 }
             }
