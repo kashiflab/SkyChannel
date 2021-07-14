@@ -134,7 +134,7 @@ class VIPMembershipActivity : AppCompatActivity(), PurchasesUpdatedListener,
                 if (skuDetailsList!!.size > 0) {
                     skuDetail = skuDetailsList
                     Log.i(TAG,skuDetailsList.toString())
-                    adapter = SkuAdapter(this, skuDetailsList, this)
+                    adapter = SkuAdapter(this, skuDetailsList, true,this)
 
                     runOnUiThread {
                         binding.skuRecyclerView.adapter = adapter

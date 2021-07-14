@@ -118,7 +118,7 @@ class BuyPointsActivity : AppCompatActivity(), PurchasesUpdatedListener,
                 if (skuDetailsList!!.size > 0) {
                     skuDetail = skuDetailsList
                     Log.i(TAG,skuDetailsList.toString())
-                    adapter = SkuAdapter(this, skuDetailsList, this)
+                    adapter = SkuAdapter(this, skuDetailsList, false,this)
 
                     runOnUiThread {
                         binding.skuRecyclerView.adapter = adapter

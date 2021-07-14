@@ -12,11 +12,14 @@ import com.sidhow.skychannel.R
 class SkuAdapter(
     private var context: Context,
     var skuDetails: List<SkuDetails>,
+    private var isVIP: Boolean,
     var listener: OnItemClickListener
 ): RecyclerView.Adapter<SkuAdapter.ViewHolder>() {
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val title = itemView.findViewById<TextView>(R.id.title)
         val price = itemView.findViewById<TextView>(R.id.price)
+        val freeTrial = itemView.findViewById<TextView>(R.id.freeTrial)
+        val gracePeriod = itemView.findViewById<TextView>(R.id.gracePeriod)
         var parent = itemView
         init {
             parent.tag = this
@@ -32,8 +35,34 @@ class SkuAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val sku = skuDetails[position]
 
-        holder.title.text = sku.title.split("(")[0]
-        holder.price.text = sku.price
+        val mainTitle = sku.title.split("(")[0]
+        holder.title.text = mainTitle
+        holder.price.text = "${sku.price}"
+
+        if(isVIP){
+            holder.freeTrial.visibility = View.VISIBLE
+            if(sku.freeTrialPeriod.isNotEmpty()) {
+                when(sku.freeTrialPeriod){
+                    "P1W"->{
+                        holder.freeTrial.text = "1 Week free trial"
+                    }
+                    "P3D"->{
+                        holder.freeTrial.text = "3 Days free trial"
+                    }
+                }
+
+            }else{
+                holder.freeTrial.text = "No free trial"
+            }
+            holder.gracePeriod.visibility = View.VISIBLE
+            if(mainTitle.contains("Weekly") ||
+                mainTitle.contains("Monthly")
+            ) {
+                holder.gracePeriod.text = "3 days grace period"
+            }else{
+                holder.gracePeriod.text = "7 days grace period"
+            }
+        }
 
         holder.itemView.setOnClickListener {
             listener.onItemClick(sku)
